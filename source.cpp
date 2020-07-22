@@ -40,29 +40,105 @@ private:
 };
 
 int main(){
-    ifstream read;
-    ofstream write;
+    ifstream fin;
+    
     
     int64_t orderId;
     int32_t orderPrice;
 
-    read.open("hello.txt");
-    write.open("addOrder.txt");
+    fin.open("AddOrderMessage.txt");
+
+    if(!fin){
+        cerr<<"Error opening hello.txt for reading\n";
+        return 1;
+    }
 
     AddOrderMessage messageA;
-    string id,price;
-    getline(read,id,';');
-    getline(read,price,'\n');
-    
-    //cout<<id<<";"<<price<<endl;
-    
-    orderId=stoll(id,0,20);
-    orderPrice=stoi(price);
-    messageA.setOrderId(orderId);
-    messageA.setPrice(orderPrice);
 
-    for(int i=0;i<10;++i)    
-        write<<messageA;
+    ofstream fout;
 
+    fout.open("addOrder.txt");
+
+    if(!fout){
+        cerr<<"Error opening hello.txt for writing\n";
+        return 1;
+    }
+
+    
+    char c;
+    //fin.get(c);
+    
+    while(!fin.eof()){
+
+        int flag=1;
+        
+        while(flag!=2){
+            fin.get(c);
+            if(c==EOF)
+            {   
+                fin.close();
+                return 0;
+            }
+        //cout<<c<<" ";
+            if(c==';')
+                ++flag;
+        }
+        
+        if(c==EOF)
+        {   fin.close();
+            return 0;
+        }
+        fin.get(c);
+        //cout<<c<<endl;
+        //cout<<c;
+        if(c=='A'){//Add order message check
+            
+            while(flag!=4){
+                if(c==EOF)
+                {   fin.close();
+                    return 0;
+                }
+                fin.get(c);
+                if(c==';')
+                    ++flag;
+            }
+            
+            fin>>orderId;
+            //cout<<orderId<<" ";
+            messageA.setOrderId(orderId);
+
+            while(flag!=9){
+                fin.get(c);
+                if(c==';')
+                    ++flag;
+            }
+
+            fin>>orderPrice;
+            //cout<<orderPrice<<endl;
+
+            messageA.setPrice(orderPrice);
+
+            fout<<messageA;
+
+            do{
+                fin.get(c);
+            }
+            while(!fin.eof() && c!='\n');
+            
+            
+        }
+        else{
+            
+            do{
+                fin.get(c);
+            }
+            while(!fin.eof() && c!='\n');
+            
+        }
+        
+    }
+
+    fin.close();
+    fout.close();
     return 0;
 }
