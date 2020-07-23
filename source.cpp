@@ -46,7 +46,7 @@ int main(){
     int64_t orderId;
     int32_t orderPrice;
 
-    fin.open("AddOrderMessage.txt");
+    fin.open("./documentation/AddOrderMessage.txt");
 
     if(!fin){
         cerr<<"Error opening hello.txt for reading\n";
@@ -57,7 +57,7 @@ int main(){
 
     ofstream fout;
 
-    fout.open("addOrder.txt");
+    fout.open("./documentation/addOrder.txt");
 
     if(!fout){
         cerr<<"Error opening hello.txt for writing\n";
