@@ -1,13 +1,14 @@
-#include<fstream>
+#include<string>
 
 class MessageImp{
 public:
 
-    virtual MessageImp* search(std::ifstream & file)=0;
+    virtual bool searchMessage(const std:: string &line)=0;
+    virtual void print()=0;
 
 protected:
-    MessageImp(int64_t newId=0):orderId{newId}
+    MessageImp(uint64_t newId=0):orderId{newId}
     { /* intentionally left blank */}
 
-    int64_t orderId;
+    uint64_t orderId;
 };
