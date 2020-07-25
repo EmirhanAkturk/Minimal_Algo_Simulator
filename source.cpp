@@ -1,73 +1,33 @@
-#include<iostream>
-#include<fstream>
-#include<string>
-
-using namespace std;
-
-class Message{
-public:
-
-    Message(int64_t newOrderId=0):orderId{newOrderId}
-    {/* nothing was deliberately written */}
-
-    void setOrderId(int64_t newOrderId){
-        orderId=newOrderId;
-    }
-
-protected:
-    int64_t orderId;
-};
-
-class AddOrderMessage:public Message{
-
-    friend ofstream& operator<<(ofstream& file,const AddOrderMessage& message){
-        file<<message.orderId<<";"<<message.orderPrice<<endl;
-        return file;
-    }
-
-public:
-    AddOrderMessage(int64_t newOrderId=0,int32_t newOrderPrice=0):Message{newOrderId},orderPrice{newOrderPrice}
-    {/* nothing was deliberately written */}
-
-
-    void setPrice(int32_t newOrderPrice){
-        orderPrice=newOrderPrice;
-    }
-
-private:
-
-    int32_t orderPrice;
-};
+#include "AddOrderImp.cpp"
 
 int main(){
-    ifstream fin;
+    ifstream inFile;
     
-    
-    int64_t orderId;
-    int32_t orderPrice;
+    //inFile.open("./documentation/AddOrderMessage.txt");
+    inFile.open("message.txt");
 
-    fin.open("./documentation/AddOrderMessage.txt");
-
-    if(!fin){
+    if(!inFile){
         cerr<<"Error opening hello.txt for reading\n";
         return 1;
     }
+    
+    BinarySearchTree tree;
+    fileRead(inFile,tree);
+    
+    
+    tree.printInorder(tree.getRoot());
 
-    AddOrderMessage messageA;
+    ofstream outFile;
+    
+    outFile.open("addOrder.txt");
+    tree.writeInorder(tree.getRoot(), outFile);
 
-    ofstream fout;
-
-    fout.open("./documentation/addOrder.txt");
-
-    if(!fout){
+    if(!outFile){
         cerr<<"Error opening hello.txt for writing\n";
         return 1;
     }
 
-    
-    char c;
-    //fin.get(c);
-    
+ /*    
     while(!fin.eof()){
 
         int flag=1;
@@ -137,8 +97,8 @@ int main(){
         }
         
     }
-
-    fin.close();
-    fout.close();
+ */
+    inFile.close();
+    outFile.close();
     return 0;
 }
