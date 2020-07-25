@@ -16,6 +16,14 @@ int main(){
     
     
     tree.printInorder(tree.getRoot());
+    uint64_t queryId=6987443128057031513;
+    Node* query=tree.searchNode(tree.getRoot(),queryId);
+
+    if(query!= nullptr){
+        cout<<"Found and deleted:"<<query->orderId<<";"<<query->orderPrice<<endl;
+        tree.deleteNode(tree.getRoot(),queryId);
+    }
+    else cout<<"Not found\n";
 
     ofstream outFile;
     

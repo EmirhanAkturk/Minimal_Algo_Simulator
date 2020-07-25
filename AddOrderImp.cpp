@@ -50,7 +50,7 @@ Node* BinarySearchTree::insertNode(Node* rootPtr,uint64_t orderId, uint64_t orde
         return rootPtr;
     }
 
-    else if(orderPrice <= rootPtr->orderId){
+    else if(orderId <= rootPtr->orderId){
         rootPtr->left = insertNode(rootPtr->left,orderId,orderPrice);
     }
 
