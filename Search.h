@@ -2,7 +2,7 @@
 #define _SEARCH_H_
 
 #include "MessageImp.h"
-
+#include "Bst.h"
 
 //struct Node;
 class Search:public MessageImp{
@@ -12,8 +12,9 @@ public:
 
     virtual void operation(const char* file);
 
-    virtual void fileRead(ifstream & inFile,BinarySearchTree *tree,char messageType);
-    virtual int findColumn(istringstream& inString,int flag,int collumn);
+private:
+    void fileRead(ifstream & inFile,BinarySearchTree & tree,char messageType);
+    int findColumn(istringstream& inString,int flag,int collumn);
     
 };
 
