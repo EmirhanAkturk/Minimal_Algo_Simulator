@@ -1,6 +1,6 @@
 #include "MessageImp.h"
 #include <iostream> 
-#include <sstream>
+//#include <sstream> Exists in MessageImp.h file
 #include <fstream>
 using namespace std;
 
@@ -28,8 +28,7 @@ public:
         return orderPrice;
     }
 
-    
-    virtual bool searchMessage(const string &line);
+    virtual bool searchMessage(istringstream & inString,int flag);
     virtual void print();
 
 private:
@@ -52,11 +51,14 @@ public:
     BinarySearchTree(Node *newRootPtr=nullptr):rootPtr{newRootPtr}
     {/* intentionally left blank */}
 
-    Node* insertNode(Node* rootPtr,uint64_t orderId, uint64_t orderPrice);
-    Node* addNewNode(uint64_t orderId, uint64_t orderPrice);
+    Node* insertNode(Node* rootPtr,uint64_t orderId, uint32_t orderPrice);
+    Node* addNewNode(uint64_t orderId, uint32_t orderPrice);
+    
+    // Node* insertNode(Node* rootPtr,uint64_t orderId);
+    // Node* addNewNode(uint64_t orderId);
     
     Node* searchNode(Node* rootPtr,uint64_t orderId)const;
-    Node* searchNode(Node* rootPtr,uint32_t orderPrice)const;
+    //Node* searchNode(Node* rootPtr,uint32_t orderPrice)const;
 
     Node* minValueNode(Node* node)const; 
     Node* maxValueNode(Node* node)const;
@@ -88,5 +90,6 @@ private:
 
 };
 
-void fileRead(ifstream &inFile,Node* rootPtr);
+void fileRead(ifstream & inFile,Node* rootPtr,char messageType);
+int findColumn(istringstream& inString,int flag,int collumn);
 

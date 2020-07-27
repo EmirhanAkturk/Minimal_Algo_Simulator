@@ -1,32 +1,24 @@
 #include "AddOrderImp.h"
 
-bool  AddOrderImp:: searchMessage(const string & line){
-    istringstream sin(line);//sin ile string içinde gezilecek
-    int flag=1;//1. sütündan başlanacak
-    auto findColumn=[&flag,&sin](int collumn){//istenilen sütün bulunur
-        char c;
-        while(!sin.eof() && flag<collumn){
-            sin>>c;
-            if(c==';')
-                ++flag;
-        }
-    };
+bool  AddOrderImp:: searchMessage(istringstream & inString,int flag){
+    //istringstream sin(line);//sin ile string içinde gezilecek
+    //int flag=2;//2. sütündan devam edecek
 
-    char messageType;
-    findColumn(2);
-    sin>>messageType;
-
-    if(messageType=='A'){
-        
-        findColumn(4);
-        sin>>orderId;
-        findColumn(9);
-        sin>>orderPrice;
-
-        return true;
+    flag=findColumn(inString,flag ,4);
+    if(flag!=4){
+        cerr<<"Incorrect column value!!\n";
+        return false;
     }
+    inString>>orderId;
 
-    else return false;
+    flag=findColumn(inString,flag ,9);
+    if(flag!=9){
+        cerr<<"Incorrect column value!!\n";
+        return false;
+    }
+    inString>>orderPrice;
+
+    return true;
        
 }
 
@@ -34,7 +26,7 @@ void AddOrderImp::print(){
     cout<<orderId<<" "<<orderPrice<<endl;
 }
 
-Node* BinarySearchTree:: addNewNode(uint64_t newOrderId, uint64_t newOrderPrice){
+Node* BinarySearchTree:: addNewNode(uint64_t newOrderId, uint32_t newOrderPrice){
     Node* newNode = new Node();
 	newNode->orderId = newOrderId;
     newNode->orderPrice=newOrderPrice;
@@ -43,10 +35,10 @@ Node* BinarySearchTree:: addNewNode(uint64_t newOrderId, uint64_t newOrderPrice)
     return newNode;
 }
 
-Node* BinarySearchTree::insertNode(Node* rootPtr,uint64_t orderId, uint64_t orderPrice){
+Node* BinarySearchTree::insertNode(Node* rootPtr,uint64_t orderId, uint32_t orderPrice){
     if(rootPtr==nullptr){//
         rootPtr=addNewNode(orderId,orderPrice);
-        this->rootPtr=rootPtr;
+        //this->rootPtr=rootPtr;
         return rootPtr;
     }
 
@@ -58,7 +50,7 @@ Node* BinarySearchTree::insertNode(Node* rootPtr,uint64_t orderId, uint64_t orde
         rootPtr->right = insertNode(rootPtr->right,orderId,orderPrice);
     }
 
-    this->rootPtr=rootPtr;
+    //this->rootPtr=rootPtr;
     return rootPtr;
 }
 
@@ -151,18 +143,43 @@ Node* BinarySearchTree::deleteNode(Node* rootPtr, uint64_t orderId) {
     return rootPtr; 
 }
 
-void fileRead(ifstream &inFile, BinarySearchTree &tree){
+void fileRead(ifstream &inFile, BinarySearchTree &tree,char messageType){
     string line;
-    AddOrderImp messageA;
     while(inFile>>line){
-        messageA.searchMessage(line);
+        istringstream inString(line);
+        int flag=1;
+        flag=findColumn(inString,flag,2);
         
-        //tree.setRoot( tree.insertNode(tree.getRoot(), messageA.getOrderId(),messageA.getOrderPrice()));
-        tree.insertNode(tree.getRoot(), messageA.getOrderId(),messageA.getOrderPrice());
+        if(flag!=2){
+            cerr<<"Incorrect column value!!\n";
+            exit(1);
+        }
+
+        char c;
+        inString>>c;
+
+        if(messageType =='A' && c=='A'){
+            AddOrderImp messageA;
+            if(messageA.searchMessage(inString,flag)){
+                tree.setRoot( tree.insertNode(tree.getRoot(), messageA.getOrderId(),messageA.getOrderPrice()));
+                //tree.insertNode(tree.getRoot(), messageA.getOrderId(),messageA.getOrderPrice());
+            }
+        }
+
         if(line == ";")//tekrar bak
-            break;
+                break;
+    }
+}
+
+int findColumn(istringstream& inString,int flag,int collumn){
+    char c;
+    while(!inString.eof() && flag<collumn){
+        inString>>c;
+        if(c==';')
+            ++flag;
     }
 
+    return flag;
 }
 
 void BinarySearchTree:: writePostorder(Node * rootPtr,ofstream &outFile)const{

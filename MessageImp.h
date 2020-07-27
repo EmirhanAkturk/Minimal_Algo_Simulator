@@ -1,9 +1,10 @@
 #include<string>
+#include<sstream>
 
 class MessageImp{
 public:
 
-    virtual bool searchMessage(const std:: string &line)=0;
+    virtual bool searchMessage(std::istringstream & inString,int flag)=0;
     virtual void print()=0;
 
 protected:
