@@ -1,21 +1,18 @@
 #include "Message.h"
 #include "MessageImp.h"
 
-Message::Message(){
+Message::Message()
+{/*    Deliberately left blank  */}
 
-}
-
-Message::~Message(){
-
-}
+Message::~Message()
+{/*    Deliberately left blank  */}
 
 ClientSearch::ClientSearch( MessageImp* imp){
     _imp=imp;
 }
 
-ClientSearch::~ClientSearch(){
-
-}
+ClientSearch::~ClientSearch()
+{/*    Deliberately left blank  */}
 
 void ClientSearch:: operation(const char* file){
     _imp->operation(file);

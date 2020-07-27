@@ -2,33 +2,35 @@
 #include <sstream>
 
 
-Node* BinarySearchTree:: addNewNode(uint64_t newOrderId, uint32_t newOrderPrice){
-    Node* newNode = new Node();
-	newNode->orderId = newOrderId;
-    newNode->orderPrice=newOrderPrice;
-	newNode->left = newNode->right = nullptr;
+Node* BinarySearchTree:: addNewNode(uint64_t newOrderId){
+    Node* newNode = new Node(newOrderId);
+	// newNode->orderId = newOrderId;
+    // newNode->orderPrice=newOrderPrice;
+	// newNode->left = newNode->right = nullptr;
 
     return newNode;
 }
 
-Node* BinarySearchTree::insertNode(Node* rootPtr,uint64_t orderId, uint32_t orderPrice){
+Node* BinarySearchTree::insertNode(Node* rootPtr,uint64_t orderId){
     if(rootPtr==nullptr){//
-        rootPtr=addNewNode(orderId,orderPrice);
+        rootPtr=addNewNode(orderId);
         //this->rootPtr=rootPtr;
         return rootPtr;
     }
 
     else if(orderId <= rootPtr->orderId){
-        rootPtr->left = insertNode(rootPtr->left,orderId,orderPrice);
+        rootPtr->left = insertNode(rootPtr->left,orderId);
     }
 
     else{
-        rootPtr->right = insertNode(rootPtr->right,orderId,orderPrice);
+        rootPtr->right = insertNode(rootPtr->right,orderId);
     }
 
     //this->rootPtr=rootPtr;
     return rootPtr;
 }
+
+
 
 Node* BinarySearchTree::searchNode(Node* rootPtr,uint64_t orderId)const{
     if(rootPtr==nullptr || rootPtr->orderId == orderId) 
@@ -131,7 +133,7 @@ void BinarySearchTree:: writePostorder(Node * rootPtr,ofstream &outFile)const{
 	writePostorder(rootPtr->right,outFile);
 
 	// now deal with the node 
-	outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+	outFile << rootPtr->orderId <<endl;
 }
 
 void BinarySearchTree:: writeInorder(Node * rootPtr,ofstream & outFile)const{
@@ -142,7 +144,7 @@ void BinarySearchTree:: writeInorder(Node * rootPtr,ofstream & outFile)const{
 	writeInorder(rootPtr->left,outFile);
 
 	// then deal with the node 
-	outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+	outFile << rootPtr->orderId <<endl;
 
 	// now recur on right subtree 
 	writeInorder(rootPtr->right,outFile);
@@ -160,10 +162,69 @@ void BinarySearchTree::printPostorder(Node * rootPtr)const{
 	printPostorder(rootPtr->right);
 
 	// now deal with the node 
-	cout << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+	cout << rootPtr->orderId <<endl;
 }
 
 void BinarySearchTree::printInorder(Node * rootPtr)const{
+    if(rootPtr == nullptr)
+        return;
+    
+    // first recur on left subtree 
+	printInorder(rootPtr->left);
+
+	// then deal with the node 
+	cout << rootPtr->orderId <<endl;
+
+	// now recur on right subtree 
+	printInorder(rootPtr->right);
+    
+}
+
+
+void AddOrderBts:: writePostorder(AddOrderNode * rootPtr,ofstream &outFile)const{
+    if (rootPtr == nullptr)
+		return;
+
+	// first recur on left subtree 
+	writePostorder(rootPtr->left,outFile);
+
+	// then recur on right subtree 
+	writePostorder(rootPtr->right,outFile);
+
+	// now deal with the node 
+	outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+}
+
+void AddOrderBts:: writeInorder(AddOrderNode * rootPtr,ofstream & outFile)const{
+    if(rootPtr == nullptr)
+        return;
+    
+    // first recur on left subtree 
+	writeInorder(rootPtr->left,outFile);
+
+	// then deal with the node 
+	outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+
+	// now recur on right subtree 
+	writeInorder(rootPtr->right,outFile);
+    
+}
+
+void AddOrderBts::printPostorder(AddOrderNode * rootPtr)const{
+    if (rootPtr == nullptr)
+		return;
+
+	// first recur on left subtree 
+	printPostorder(rootPtr->left);
+
+	// then recur on right subtree 
+	printPostorder(rootPtr->right);
+
+	// now deal with the node 
+	cout << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+}
+
+void AddOrderBts::printInorder(AddOrderNode * rootPtr)const{
     if(rootPtr == nullptr)
         return;
     
@@ -175,5 +236,32 @@ void BinarySearchTree::printInorder(Node * rootPtr)const{
 
 	// now recur on right subtree 
 	printInorder(rootPtr->right);
-    
+}
+
+AddOrderNode* AddOrderBts:: addNewNode(uint64_t newOrderId, uint32_t newOrderPrice){
+    AddOrderNode* newNode = new AddOrderNode(newOrderId,newOrderPrice);
+	// newNode->orderId = newOrderId;
+    // newNode->orderPrice=newOrderPrice;
+	// newNode->left = newNode->right = nullptr;
+
+    return newNode;
+}
+
+AddOrderNode* AddOrderBts::insertNode(AddOrderNode* rootPtr,uint64_t orderId, uint32_t orderPrice){
+    if(rootPtr==nullptr){//
+        rootPtr=addNewNode(orderId,orderPrice);
+        //this->rootPtr=rootPtr;
+        return rootPtr;
+    }
+
+    else if(orderId <= rootPtr->orderId){
+        rootPtr->left = insertNode(rootPtr->left,orderId,orderPrice);
+    }
+
+    else{
+        rootPtr->right = insertNode(rootPtr->right,orderId,orderPrice);
+    }
+
+    //this->rootPtr=rootPtr;
+    return rootPtr;
 }

@@ -12,7 +12,7 @@ int main(){
     Message* cSearch=new ClientSearch(imp);
 
     const char *file="message.txt";
-    cSearch->operation("message.txt");
+    cSearch->operation(file);
     
     return 0;
 }
