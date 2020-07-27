@@ -1,15 +1,13 @@
-#include<string>
-#include<sstream>
+#ifndef _MESSAGEIMP_H_
+#define _MESSAGEIMP_H_
 
 class MessageImp{
 public:
-
-    virtual bool searchMessage(std::istringstream & inString,int flag)=0;
-    virtual void print()=0;
+    virtual ~MessageImp();
+    virtual void operation(const char * file)=0;
 
 protected:
-    MessageImp(uint64_t newId=0):orderId{newId}
-    { /* intentionally left blank */}
-
-    uint64_t orderId;
+    MessageImp();
 };
+
+#endif
