@@ -42,7 +42,7 @@ public:
     }
 
     bool remove(uint64_t orderId) {
-        root = remove(root,orderId);//return değerlerini kontrol et!!
+        root = removeNode(root,orderId);//return değerlerini kontrol et!!
         if(root!=nullptr)
             return true;
         
@@ -60,7 +60,7 @@ public:
         else cout<<"invalid selection!\n";
     }
 
-    void print(int c) {//1:inorder,2:preorder,3:postorder
+    void print(int c){//1:inorder,2:preorder,3:postorder
         if(c==1)
             inorder(root);
         else if(c==2)
@@ -68,7 +68,7 @@ public:
         else if(c==3)
             postorder(root);
         else cout<<"invalid selection!\n";
-        
+
         cout << endl;
     }
 
@@ -107,7 +107,7 @@ private:
     Node* findMin(Node* t);
 
     Node* findMax(Node* t);
-    Node* remove(Node* t,uint64_t orderId);
+    Node* removeNode(Node* t,uint64_t orderId);
 
     Node* find(Node* t, uint64_t orderId);
 

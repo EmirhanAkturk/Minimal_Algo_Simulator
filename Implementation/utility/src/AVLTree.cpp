@@ -250,7 +250,7 @@ Node* AVLTree::findMax(Node* t) {
         return findMax(t->right);
 }
 
-Node* AVLTree::remove(Node* t,uint64_t orderId) {
+Node* AVLTree::removeNode(Node* t,uint64_t orderId) {
     
     
     
@@ -260,12 +260,12 @@ Node* AVLTree::remove(Node* t,uint64_t orderId) {
     // If the value to be deleted is smaller than the root's value,
     // then it lies in left subtree
     else if(orderId < t->orderId)
-        t->left = remove(t->left,orderId);
+        t->left = removeNode(t->left,orderId);
 
     // If the value to be deleted is greater than the root's value,
     // then it lies in right subtree
     else if(orderId > t->orderId)
-        t->right = remove(t->right,orderId);
+        t->right = removeNode(t->right,orderId);
     
     // if value is same as root's value, then This is the Node
     // to be deleted
@@ -309,7 +309,7 @@ Node* AVLTree::remove(Node* t,uint64_t orderId) {
             t->orderPrice=temp->orderPrice;
 
             // remove the inorder successor
-            t->right=remove(t->right,temp->orderId);
+            t->right=removeNode(t->right,temp->orderId);
 
         }
     }
