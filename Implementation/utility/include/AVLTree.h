@@ -6,14 +6,20 @@
 
 using namespace std;
 
-struct node {
+//template<typename T>
+class Node {
+public:
+    Node(uint64_t newOrderId,uint32_t newOrderPrice):orderId{newOrderId},orderPrice{newOrderPrice},
+    height{0},left{nullptr},right{nullptr}
+    { /* deliberately left blank */}
+
     uint64_t orderId;
     uint32_t orderPrice;
         
     int height;
     
-    node* left;
-    node* right;
+    Node* left;
+    Node* right;
 
 };
 
@@ -32,7 +38,7 @@ public:
     //     if(root!=nullptr)
     //         Insert(root,orderId,orderPrice);
     //     else root = Insert(root,orderId,orderPrice);
-        root=insert(root,orderId,orderPrice);
+        root=insertNode(root,orderId,orderPrice);
     }
 
     bool remove(uint64_t orderId) {
@@ -43,18 +49,31 @@ public:
         else return false;
     }
 
-    void writeFile(ofstream & outFile){
-        writeInorder(root,outFile);
-
+    void writeFile(ofstream & outFile,int c){//1:inorder,2:preorder,3:postorder
+        if(c==1)
+            writeInorder(root,outFile);
+        else if(c==2)
+            writePreorder(root,outFile);
+        else if(c==3)
+            writePostorder(root,outFile);
+        
+        else cout<<"invalid selection!\n";
     }
 
-    void display() {
-        inorder(root);
+    void print(int c) {//1:inorder,2:preorder,3:postorder
+        if(c==1)
+            inorder(root);
+        else if(c==2)
+            preorder(root);
+        else if(c==3)
+            postorder(root);
+        else cout<<"invalid selection!\n";
+        
         cout << endl;
     }
 
     bool search(uint64_t orderId) {
-        node *query=find(root, orderId);
+        Node *query=find(root, orderId);
         
         if(query!=nullptr)
             return true;
@@ -65,39 +84,43 @@ public:
 
 private:
 
-    node* root;
+    Node* root;
 
-    node* makeEmpty(node* t);
+    Node* makeEmpty(Node* t);
+
+    Node* doBalanced(Node *t);
     
-    int height(node *t);
-    int getBalance(node *t); 
+    Node* doBalanced(Node *t,uint64_t newOrderId);
 
-    node* doBalanced(node *t,uint64_t newOrderId);
+    //Node* newNode(uint64_t newOrderId,uint32_t newOrderPrice); 
     
-    node* doBalanced(node *t);
+    Node* insertNode( Node* t,uint64_t newOrderId,uint32_t newOrderPrice);
 
-    node* newNode(uint64_t newOrderId,uint32_t newOrderPrice); 
-    
-    node* insert( node* t,uint64_t newOrderId,uint32_t newOrderPrice);
+    Node *rightRotate(Node *t);
 
-    node *rightRotate(node *t);
-
-    node *leftRotate(node *x);
+    Node *leftRotate(Node *t);
 
    /*  
-    node* Insert(node* root, uint64_t newOrderId,uint32_t newOrderPrice);
+    Node* Insert(Node* root, uint64_t newOrderId,uint32_t newOrderPrice);
  */
     
-    node* findMin(node* t);
+    Node* findMin(Node* t);
 
-    node* findMax(node* t);
-    node* remove(node* t,uint64_t orderId);
+    Node* findMax(Node* t);
+    Node* remove(Node* t,uint64_t orderId);
 
-    void  writeInorder(node * rootPtr,ofstream & outFile)const;
+    Node* find(Node* t, uint64_t orderId);
 
-    void inorder(node* t);
+    void  writeInorder(Node * rootPtr,ofstream & outFile)const;
+    void  writePreorder(Node * rootPtr,ofstream & outFile)const;
+    void  writePostorder(Node * rootPtr,ofstream & outFile)const;
 
-    node* find(node* t, uint64_t orderId);
+    void inorder(Node* t);
+    void preorder(Node* t);
+    void postorder(Node* t);
+    
+    int height(Node *t);
+    int getBalance(Node *t); 
 
 };
 

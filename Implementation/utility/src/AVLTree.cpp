@@ -1,6 +1,6 @@
 #include "../include/AVLTree.h"
 
-node* AVLTree::makeEmpty(node* t) {
+Node* AVLTree::makeEmpty(Node* t) {
     if(t == nullptr)
         return nullptr;
     
@@ -12,7 +12,7 @@ node* AVLTree::makeEmpty(node* t) {
     return nullptr;
 }
 
-int AVLTree::height(node *t) 
+int AVLTree::height(Node *t) 
 { 
     if (t == nullptr) 
         return 0; 
@@ -20,18 +20,18 @@ int AVLTree::height(node *t)
     return t->height; 
 } 
 
-int AVLTree::getBalance(node *t) 
+int AVLTree::getBalance(Node *t) 
 { 
     if (t == NULL) 
         return 0; 
     return height(t->left) - height(t->right); 
 } 
 
-node* AVLTree::doBalanced(node *t,uint64_t newOrderId){
+Node* AVLTree::doBalanced(Node *t,uint64_t newOrderId){
 
     int balance = getBalance(t);
 
-    // If this node becomes unbalanced, then 
+    // If this Node becomes unbalanced, then 
     // there are 4 cases 
 
     // Left Left Case 
@@ -59,10 +59,10 @@ node* AVLTree::doBalanced(node *t,uint64_t newOrderId){
     return t;
 }
 
-node* AVLTree::doBalanced(node *t){
+Node* AVLTree::doBalanced(Node *t){
     
     int balance = getBalance(t);
-    // If this node becomes unbalanced, then 
+    // If this Node becomes unbalanced, then 
     // there are 4 cases 
 
     // Left Left Case 
@@ -87,29 +87,29 @@ node* AVLTree::doBalanced(node *t){
         return leftRotate(t); 
     } 
 
-    /* return the (unchanged) node pointer */
+    /* return the (unchanged) Node pointer */
     return t;
 
 }
 
-node* AVLTree::newNode(uint64_t newOrderId,uint32_t newOrderPrice) 
-{ 
-    node* temp = new node; 
+// Node* AVLTree::newNode(uint64_t newOrderId,uint32_t newOrderPrice) 
+// { 
+//     Node* temp = new Node; 
 
-    temp->orderId = newOrderId; 
-    temp->orderPrice = newOrderPrice; 
+//     temp->orderId = newOrderId; 
+//     temp->orderPrice = newOrderPrice; 
 
-    temp->height=0;
-    temp->left = nullptr; 
-    temp->right = nullptr; 
+//     temp->height=0;
+//     temp->left = nullptr; 
+//     temp->right = nullptr; 
 
-    return temp; 
-}  
+//     return temp; 
+// }  
     
 
-node* AVLTree::insert( node* t,uint64_t newOrderId,uint32_t newOrderPrice)
+Node* AVLTree::insertNode( Node* t,uint64_t newOrderId,uint32_t newOrderPrice)
 {
-    node* query= find(t,newOrderId);
+    Node* query= find(t,newOrderId);
 
     if(query!=nullptr){
         if(query->orderPrice!=newOrderPrice){
@@ -122,35 +122,36 @@ node* AVLTree::insert( node* t,uint64_t newOrderId,uint32_t newOrderPrice)
     /* 1. Perform the normal BST insertion */
     if(t == nullptr)
     {
-        return (newNode(newOrderId,newOrderPrice));
+        Node *temp=new Node(newOrderId,newOrderPrice);
+        return temp;
     }
 
     if(newOrderId < t->orderId){
-        t->left = insert(t->left,newOrderId,newOrderPrice);
+        t->left = insertNode(t->left,newOrderId,newOrderPrice);
     }
 
     else if(newOrderId > t->orderId){
-        t->right = insert(t->right, newOrderId, newOrderPrice);
+        t->right = insertNode(t->right, newOrderId, newOrderPrice);
     }   
     
     else return t;
 
-    /* 2. Update height of this ancestor node */
+    /* 2. Update height of this ancestor Node */
     t->height=max(height(t->left), height(t->right))+1;
 
     /* 3. Get the balance factor of this ancestor 
-    node to check whether this node became 
+    Node to check whether this Node became 
     unbalanced */
     
     return doBalanced(t,newOrderId);
-    /* return the (unchanged) node pointer */
+    /* return the (unchanged) Node pointer */
     //return t;
 }
 
-node * AVLTree::rightRotate(node *t) 
+Node * AVLTree::rightRotate(Node *t) 
 { 
-    node *x = t->left; 
-    node *T2 = x->right; 
+    Node *x = t->left; 
+    Node *T2 = x->right; 
 
     // Perform rotation 
     x->right = t; 
@@ -167,10 +168,10 @@ node * AVLTree::rightRotate(node *t)
     return x; 
 } 
 
-node * AVLTree::leftRotate(node *x) 
+Node * AVLTree::leftRotate(Node *x) 
 { 
-    node *y = x->right; 
-    node *T2 = y->left; 
+    Node *y = x->right; 
+    Node *T2 = y->left; 
 
     // Perform rotation 
     y->left = x; 
@@ -187,20 +188,20 @@ node * AVLTree::leftRotate(node *x)
 } 
 
 /*  
-node* AVLTree::Insert(node* root, uint64_t newOrderId,uint32_t newOrderPrice) 
+Node* AVLTree::Insert(Node* root, uint64_t newOrderId,uint32_t newOrderPrice) 
 {  
     // Create a new Node containing 
     // the new element 
-    node* newnode = newNode(newOrderId,newOrderPrice); 
+    Node* newNode = newNode(newOrderId,newOrderPrice); 
 
     // Pointer to start traversing from root and 
     // traverses downward path to search 
-    // where the new node to be inserted 
-    node* x = root; 
+    // where the new Node to be inserted 
+    Node* x = root; 
 
     // Pointer y maintains the trailing 
     // pointer of x 
-    node* y = nullptr; 
+    Node* y = nullptr; 
 
     while (x != nullptr) { 
         y = x; 
@@ -211,26 +212,26 @@ node* AVLTree::Insert(node* root, uint64_t newOrderId,uint32_t newOrderPrice)
     } 
 
     // If the root is nullptr i.e the tree is empty 
-    // The new node is the root node 
+    // The new Node is the root Node 
     if (y == nullptr) 
-        y = newnode; 
+        y = newNode; 
 
-    // If the new key is less then the leaf node key 
-    // Assign the new node to be its left child 
+    // If the new key is less then the leaf Node key 
+    // Assign the new Node to be its left child 
     else if (newOrderId < y->orderId) 
-        y->left = newnode; 
+        y->left = newNode; 
 
-    // else assign the new node its right child 
+    // else assign the new Node its right child 
     else
-        y->right = newnode; 
+        y->right = newNode; 
 
     // Returns the pointer where the 
-    // new node is inserted 
+    // new Node is inserted 
     return y; 
 } 
 */
 
-node* AVLTree::findMin(node* t)
+Node* AVLTree::findMin(Node* t)
 {
     if(t == nullptr)
         return nullptr;
@@ -240,7 +241,7 @@ node* AVLTree::findMin(node* t)
         return findMin(t->left);
 }
 
-node* AVLTree::findMax(node* t) {
+Node* AVLTree::findMax(Node* t) {
     if(t == nullptr)
         return nullptr;
     else if(t->right == nullptr)
@@ -249,7 +250,7 @@ node* AVLTree::findMax(node* t) {
         return findMax(t->right);
 }
 
-node* AVLTree::remove(node* t,uint64_t orderId) {
+Node* AVLTree::remove(Node* t,uint64_t orderId) {
     
     
     
@@ -266,14 +267,14 @@ node* AVLTree::remove(node* t,uint64_t orderId) {
     else if(orderId > t->orderId)
         t->right = remove(t->right,orderId);
     
-    // if value is same as root's value, then This is the node
+    // if value is same as root's value, then This is the Node
     // to be deleted
     else 
     {   
-        // node with only one child or no child
+        // Node with only one child or no child
         if( (t->left == nullptr) || (t->right == nullptr) ) {
             
-            node * temp;
+            Node * temp;
 
             if(t->left == nullptr){
                 temp = t->right;
@@ -298,12 +299,12 @@ node* AVLTree::remove(node* t,uint64_t orderId) {
 
         }
         else{
-            // node with two children: Get the inorder successor (smallest
+            // Node with two children: Get the inorder successor (smallest
             // in the right subtree)
 
-            node * temp = findMin(t->right);
+            Node * temp = findMin(t->right);
 
-            // Copy the inorder successor's data to this node
+            // Copy the inorder successor's data to this Node
             t->orderId=temp->orderId;
             t->orderPrice=temp->orderPrice;
 
@@ -313,7 +314,7 @@ node* AVLTree::remove(node* t,uint64_t orderId) {
         }
     }
     
-    // If the tree had only one node then return
+    // If the tree had only one Node then return
     if(t==nullptr)
         return t;
 
@@ -322,21 +323,50 @@ node* AVLTree::remove(node* t,uint64_t orderId) {
     return doBalanced(t);
 }
 
-void  AVLTree::writeInorder(node * rootPtr,ofstream & outFile)const{
+void  AVLTree::writeInorder(Node * rootPtr,ofstream & outFile)const{
     if(rootPtr == nullptr)
         return;
     
     // first recur on left subtree 
     writeInorder(rootPtr->left,outFile);
 
-    // then deal with the node 
+    // then deal with the Node 
     outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
 
     // now recur on right subtree 
     writeInorder(rootPtr->right,outFile);
 }
 
-void AVLTree::inorder(node* t) {
+void  AVLTree::writePreorder(Node * rootPtr,ofstream & outFile)const{
+    if(rootPtr == nullptr)
+        return;
+    
+    // first recur on node
+    outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+
+    // then deal with the left subtree
+    writePreorder(rootPtr->left,outFile);
+
+    // now recur on right subtree 
+    writePreorder(rootPtr->right,outFile);
+}
+
+void  AVLTree::writePostorder(Node * rootPtr,ofstream & outFile)const{
+    if(rootPtr == nullptr)
+        return;
+    
+    // first recur on left subtree
+    writePostorder(rootPtr->left,outFile);
+    
+    // now recur on right subtree 
+    writePostorder(rootPtr->right,outFile);
+    
+    // then deal with the Node 
+    outFile << rootPtr->orderId <<";"<<rootPtr->orderPrice<<endl;
+
+}
+
+void AVLTree::inorder(Node* t) {
     if(t == nullptr)
         return;
     inorder(t->left);
@@ -344,7 +374,25 @@ void AVLTree::inorder(node* t) {
     inorder(t->right);
 }
 
-node* AVLTree::find(node* t, uint64_t orderId) {
+void AVLTree::preorder(Node* t) {
+    if(t == nullptr)
+        return;
+    
+    cout << t->orderId << ";"<<t->orderPrice<<endl;
+    inorder(t->left);
+    inorder(t->right);
+}
+
+void AVLTree::postorder(Node* t) {
+    if(t == nullptr)
+        return;
+    
+    inorder(t->left);
+    inorder(t->right);
+    cout << t->orderId << ";"<<t->orderPrice<<endl;
+}
+
+Node* AVLTree::find(Node* t, uint64_t orderId) {
     if(t == nullptr)
         return nullptr;
     
