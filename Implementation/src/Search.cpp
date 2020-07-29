@@ -1,11 +1,7 @@
-#include "MessageImp.h"
-#include "Search.h"
-#include <iostream>
-#include <fstream>
+#include "../include/search.h"
+
 #include <sstream>
 #include <ctime>
-
-using namespace std;
 
 MessageImp::MessageImp(){
     

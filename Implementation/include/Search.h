@@ -2,7 +2,7 @@
 #define _SEARCH_H_
 
 #include "MessageImp.h"
-#include "AVLTree.h"
+#include "../utility/include/AVLTree.h"
 
 //struct Node;
 class Search:public MessageImp{

@@ -1,11 +1,5 @@
-#include "Message.cpp"
-//#include "MessageImp.h"
-#include "Search.cpp"
-#include "AVLTree.cpp"
-
-#include<iostream>
-
-using namespace std;
+#include "Client/include/Message.h"
+#include "Implementation/include/Search.h"
 
 int main(){
     MessageImp* imp=new Search();

@@ -1,4 +1,4 @@
-#include "AVLTree.h"
+#include "../include/AVLTree.h"
 
 node* AVLTree::makeEmpty(node* t) {
     if(t == nullptr)

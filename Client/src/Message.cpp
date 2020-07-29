@@ -1,5 +1,5 @@
-#include "Message.h"
-#include "MessageImp.h"
+#include "../include/Message.h"
+#include "../../Implementation/include/MessageImp.h"
 
 Message::Message(){
 
