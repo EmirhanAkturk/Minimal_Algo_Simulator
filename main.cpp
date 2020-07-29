@@ -1,7 +1,7 @@
 #include "Message.cpp"
 //#include "MessageImp.h"
 #include "Search.cpp"
-#include "Bst.cpp"
+#include "AVLTree.cpp"
 
 #include<iostream>
 
@@ -11,8 +11,9 @@ int main(){
     MessageImp* imp=new Search();
     Message* cSearch=new ClientSearch(imp);
 
-    const char *file="message.txt";
-    cSearch->operation("message.txt");
-    
+    //const char *file="message.txt";
+    const char *file="./documentation/AddOrderMessage.txt";
+    cSearch->operation(file);
+
     return 0;
 }

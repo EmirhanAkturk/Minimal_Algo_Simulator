@@ -3,6 +3,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <ctime>
 
 using namespace std;
 
@@ -31,23 +32,44 @@ void Search::operation(const char * file){
         exit(2);
     }
 
-    BinarySearchTree AddOrdertree;
+    AVLTree AddOrdertree;
+    clock_t tstart=clock();
+
     fileRead(inFile,AddOrdertree,'A');
 
-    AddOrdertree.printInorder(AddOrdertree.getRoot());
-    uint64_t queryId=6987443128057031513;
-    Node* query=AddOrdertree.searchNode(AddOrdertree.getRoot(),queryId);
+    clock_t runtime=clock()-tstart;
+    cout<<"fileRead runTime:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
-    if(query!= nullptr){
-        cout<<"Found and deleted:"<<query->orderId<<";"<<query->orderPrice<<endl;
-        AddOrdertree.deleteNode(AddOrdertree.getRoot(),queryId);
+    //AddOrdertree.display();
+    uint64_t queryId=6987443128057031513;
+    
+    tstart=clock();
+    
+    if(AddOrdertree.search(queryId)){
+        cout<<"Found:"<<queryId<<endl;
     }
     else cout<<"Not found\n";
+    
+    runtime=clock()-tstart;
+
+    cout<<"Search runTime:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+
+    tstart=clock();
+
+    
+    if(AddOrdertree.remove(queryId)){
+        cout<<"removed:"<<queryId<<endl;
+    }
+    
+    else cout<<"Not removed\n";
+    
+    runtime=clock()-tstart;
+    cout<<"remove runTime:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
     ofstream outFile;
     
     outFile.open("addOrder.txt");
-    AddOrdertree.writeInorder(AddOrdertree.getRoot(), outFile);
+    AddOrdertree.writeFile(outFile);
 
     if(!outFile){
         cerr<<"Error opening hello.txt for writing\n";
@@ -60,9 +82,14 @@ void Search::operation(const char * file){
 
 }
 
-void Search:: fileRead(ifstream &inFile, BinarySearchTree &tree,char messageType){
+void Search:: fileRead(ifstream &inFile, AVLTree &tree,char messageType){
     string line;
+    // clock_t totalReadTime=0;
+    // clock_t totalInsertTime=0;
+
     while(inFile>>line){
+        // clock_t start=clock();
+
         istringstream inString(line);
         int flag=1;
         flag=findColumn(inString,flag,2);
@@ -93,14 +120,26 @@ void Search:: fileRead(ifstream &inFile, BinarySearchTree &tree,char messageType
             }
             inString>>orderPrice;
 
-            tree.setRoot( tree.insertNode(tree.getRoot(), orderId,orderPrice));
-                //tree.insertNode(tree.getRoot(), messageA.getOrderId(),messageA.getOrderPrice());
+            // clock_t readTime=clock()-start;
+            // totalReadTime+=readTime;
+
+            // start=clock();
+            
+            tree.insert(orderId,orderPrice);
+
+            // clock_t insertTime=clock()-start;
+
+            // totalInsertTime+=insertTime;
             
         }
 
         if(line == ";")//tekrar bak
                 break;
     }
+
+    // cout<<"Read time taken:"<<(double)1000*(totalReadTime)/CLOCKS_PER_SEC<<"ms\n";
+    // cout<<"Insert time taken:"<<(double)1000*(totalInsertTime)/CLOCKS_PER_SEC<<"ms\n";
+
 }
 
 int Search:: findColumn(istringstream& inString,int flag,int collumn){
