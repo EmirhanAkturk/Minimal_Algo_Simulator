@@ -3,7 +3,6 @@
 #ifdef _TEST_
 #include "Client/src/Message.cpp"
 #include "Implementation/src/Search.cpp"
-#include "Implementation/utility/src/AVLTree.cpp"
 #endif
 
 #ifndef _TEST_
@@ -15,9 +14,14 @@ int main(){
     MessageImp* imp=new Search();
     Message* cSearch=new ClientSearch(imp);
 
-    //const char *file="message.txt";
-    const char *file="./documentation/AddOrderMessage.txt";
-    cSearch->operation(file);
+    //const char *file="text.txt";
+    const char *fileA="./documentation/AddOrderMessage.txt";
+    const char *fileD="./documentation/OrderDeleteMessage.txt";
+    const char *fileE="./documentation/OrderExecutedMessage.txt";
+    cSearch->operation(fileA);
+    cSearch->operation(fileD);
+    cSearch->operation(fileE);
+
 
     return 0;
 }

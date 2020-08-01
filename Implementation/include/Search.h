@@ -2,7 +2,6 @@
 #define _SEARCH_H_
 
 #include "MessageImp.h"
-#include "../utility/include/AVLTree.h"
 
 //struct Node;
 class Search:public MessageImp{
@@ -13,8 +12,16 @@ public:
     virtual void operation(const char* file);
 
 private:
-    void fileRead(ifstream & inFile,AVLTree & tree,char messageType);
+    virtual void fileRead(ifstream & inFile);
+
+    virtual inline string readLine(ifstream& infile);
+    virtual void findValues(const string & line);
     int findColumn(istringstream& inString,int flag,int collumn);
+    
+
+    virtual void fileAddOrder(istringstream &inString,int flag);
+    virtual void fileOrderExecute(istringstream &inString,int flag);
+    virtual void fileOrderDelete(istringstream &inString,int flag);
     
 };
 
