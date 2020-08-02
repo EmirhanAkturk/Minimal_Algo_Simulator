@@ -1,4 +1,5 @@
 #include "../include/search.h"
+#include "../utility/include/AVLTree.inl"
 
 #include <sstream>
 #include <ctime>
@@ -46,21 +47,21 @@ void Search::operation(const char * file){
     }
     else cout<<"Not found\n";
     
-    /*//  runtime=clock()-tstart;
+    //  runtime=clock()-tstart;
 
     // cout<<"Search runTime:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
     // tstart=clock();
 
     
-    // if(AddOrdertree.remove(queryId)){
-    //     cout<<"removed:"<<queryId<<endl;
-    // }
+    if(AddOrderTree.remove(queryId)){
+        cout<<"removed:"<<queryId<<endl;
+    }
     
-    // else cout<<"Not removed\n";
+    else cout<<"Not removed\n";
     
-    // runtime=clock()-tstart;
-    // cout<<"remove runTime:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+    runtime=clock()-tstart;
+    cout<<"remove runTime:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
     // ofstream outFile;
     
@@ -71,7 +72,7 @@ void Search::operation(const char * file){
     //     cerr<<"Error opening hello.txt for writing\n";
     //     exit(2);
     // }
- */
+ 
     ofstream outFileA;
     ofstream outFileD;
     ofstream outFileE;
@@ -80,9 +81,9 @@ void Search::operation(const char * file){
     outFileD.open("orderDelete.txt"); 
     outFileE.open("OrderExecute.txt"); 
 
-    AddOrderTree.writeFile(outFileA,1);
-    OrderDeleteTree.writeFile(outFileD,1);
-    OrderExecuteTree.writeFile(outFileE,1);
+    AddOrderTree.writeFile(outFileA,INORDER);
+    OrderDeleteTree.writeFile(outFileD,INORDER);
+    OrderExecuteTree.writeFile(outFileE,INORDER);
 
 
     inFile.close();
@@ -166,13 +167,13 @@ void Search:: findValues(const string & line){
     inString>>c;
 
     switch(c){
-        case 'A': fileAddOrder(inString,flag);
+        case ADD_ORDER_TYPE: fileAddOrder(inString,flag);
             break;
         
-        case 'E': fileOrderExecute(inString,flag);
+        case ORDER_EXECUTE_TYPE: fileOrderExecute(inString,flag);
             break;
 
-        case 'D': fileOrderDelete(inString,flag);
+        case ORDER_DELETE_TYPE: fileOrderDelete(inString,flag);
             break;
         
         default:

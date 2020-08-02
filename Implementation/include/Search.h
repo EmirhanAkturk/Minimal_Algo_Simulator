@@ -3,6 +3,7 @@
 
 #include "MessageImp.h"
 
+#include "../utility/include/AVLTree.hpp"
 //struct Node;
 class Search:public MessageImp{
 public:
@@ -22,6 +23,11 @@ private:
     virtual void fileAddOrder(istringstream &inString,int flag);
     virtual void fileOrderExecute(istringstream &inString,int flag);
     virtual void fileOrderDelete(istringstream &inString,int flag);
+    
+    AVLTree<AddOrder> AddOrderTree;
+    AVLTree<OrderExecute> OrderExecuteTree;
+    AVLTree<OrderDelete> OrderDeleteTree;
+
     
 };
 

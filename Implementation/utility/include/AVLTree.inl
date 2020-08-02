@@ -1,3 +1,5 @@
+#ifndef _AVLTREE_INL_
+#define _AVLTREE_INL_
 
 /* 
 ###################################
@@ -58,7 +60,6 @@ Node<AddOrder>* AVLTree<AddOrder>::insertNode(Node<AddOrder>* node, const AddOrd
     return doBalanced(node,newData);
 }
 
-
 Node<AddOrder>* AVLTree<AddOrder>::removeNode(Node<AddOrder>* node,const AddOrder& data) {
     
     if(node == nullptr)// Element not found
@@ -73,6 +74,76 @@ Node<AddOrder>* AVLTree<AddOrder>::removeNode(Node<AddOrder>* node,const AddOrde
     // then it lies in right subtree
     else if(data.orderId > node->data.orderId)
         node->right = removeNode(node->right,data);
+    
+    // if value is same as root's value, then This is the Node
+    // to be deleted
+    else 
+    {   
+        // Node with only one child or no child
+        if( (node->left == nullptr) || (node->right == nullptr) ) {
+            
+            Node<AddOrder> * temp;
+
+            if(node->left == nullptr){
+                temp = node->right;
+                delete node;
+            }
+            else{
+                temp=node->left;
+                delete node;
+            }
+
+            // No child case
+            if(temp == nullptr){
+                temp = node;
+                node = nullptr;
+            }
+
+            else {// One child case
+                node = temp; // Copy the contents of the non-empty child
+                temp = nullptr;
+            }
+            //temp = nullptr;
+
+        }
+        else{
+            // Node with two children: Get the inorder successor (smallest
+            // in the right subtree)
+
+            Node<AddOrder> * temp = findMin(node->right);
+
+            // Copy the inorder successor's data to this Node
+            node->data=temp->data;
+
+            // remove the inorder successor
+            node->right=removeNode(node->right,temp->data);
+
+        }
+    }
+    
+    // If the tree had only one Node then return
+    if(node==nullptr)
+        return node;
+
+    node->height = max(height(node->left), height(node->right))+1;
+
+    return doBalanced(node);
+}
+
+Node<AddOrder>* AVLTree<AddOrder>::removeNode(Node<AddOrder>* node,uint64_t orderId) {
+    
+    if(node == nullptr)// Element not found
+        return nullptr;
+    
+    // If the value to be deleted is smaller than the root's value,
+    // then it lies in left subtree
+    else if(orderId < node->data.orderId)
+        node->left = removeNode(node->left,orderId);
+
+    // If the value to be deleted is greater than the root's value,
+    // then it lies in right subtree
+    else if(orderId > node->data.orderId)
+        node->right = removeNode(node->right,orderId);
     
     // if value is same as root's value, then This is the Node
     // to be deleted
@@ -511,6 +582,76 @@ Node<OrderExecute>* AVLTree<OrderExecute>::removeNode(Node<OrderExecute>* node,c
 }
 
 
+Node<OrderExecute>* AVLTree<OrderExecute>::removeNode(Node<OrderExecute>* node,uint64_t orderId) {
+    
+    if(node == nullptr)// Element not found
+        return nullptr;
+    
+    // If the value to be deleted is smaller than the root's value,
+    // then it lies in left subtree
+    else if(orderId < node->data.orderId)
+        node->left = removeNode(node->left,orderId);
+
+    // If the value to be deleted is greater than the root's value,
+    // then it lies in right subtree
+    else if(orderId > node->data.orderId)
+        node->right = removeNode(node->right,orderId);
+    
+    // if value is same as root's value, then This is the Node
+    // to be deleted
+    else 
+    {   
+        // Node with only one child or no child
+        if( (node->left == nullptr) || (node->right == nullptr) ) {
+            
+            Node<OrderExecute> * temp;
+
+            if(node->left == nullptr){
+                temp = node->right;
+                delete node;
+            }
+            else{
+                temp=node->left;
+                delete node;
+            }
+
+            // No child case
+            if(temp == nullptr){
+                temp = node;
+                node = nullptr;
+            }
+
+            else {// One child case
+                node = temp; // Copy the contents of the non-empty child
+                temp = nullptr;
+            }
+            //temp = nullptr;
+
+        }
+        else{
+            // Node with two children: Get the inorder successor (smallest
+            // in the right subtree)
+
+            Node<OrderExecute> * temp = findMin(node->right);
+
+            // Copy the inorder successor's data to this Node
+            node->data=temp->data;
+
+            // remove the inorder successor
+            node->right=removeNode(node->right,temp->data);
+
+        }
+    }
+    
+    // If the tree had only one Node then return
+    if(node==nullptr)
+        return node;
+
+    node->height = max(height(node->left), height(node->right))+1;
+
+    return doBalanced(node);
+}
+
 Node<OrderExecute>* AVLTree<OrderExecute>::searchNode(Node<OrderExecute>* node, const OrderExecute& data) {
     if(node == nullptr)
         return nullptr;
@@ -892,6 +1033,75 @@ Node<OrderDelete>* AVLTree<OrderDelete>::removeNode(Node<OrderDelete>* node,cons
     return doBalanced(node);
 }
 
+Node<OrderDelete>* AVLTree<OrderDelete>::removeNode(Node<OrderDelete>* node,uint64_t orderId) {
+    
+    if(node == nullptr)// Element not found
+        return nullptr;
+    
+    // If the value to be deleted is smaller than the root's value,
+    // then it lies in left subtree
+    else if(orderId < node->data.orderId)
+        node->left = removeNode(node->left,orderId);
+
+    // If the value to be deleted is greater than the root's value,
+    // then it lies in right subtree
+    else if(orderId > node->data.orderId)
+        node->right = removeNode(node->right,orderId);
+    
+    // if value is same as root's value, then This is the Node
+    // to be deleted
+    else 
+    {   
+        // Node with only one child or no child
+        if( (node->left == nullptr) || (node->right == nullptr) ) {
+            
+            Node<OrderDelete> * temp;
+
+            if(node->left == nullptr){
+                temp = node->right;
+                delete node;
+            }
+            else{
+                temp=node->left;
+                delete node;
+            }
+
+            // No child case
+            if(temp == nullptr){
+                temp = node;
+                node = nullptr;
+            }
+
+            else {// One child case
+                node = temp; // Copy the contents of the non-empty child
+                temp = nullptr;
+            }
+            //temp = nullptr;
+
+        }
+        else{
+            // Node with two children: Get the inorder successor (smallest
+            // in the right subtree)
+
+            Node<OrderDelete> * temp = findMin(node->right);
+
+            // Copy the inorder successor's data to this Node
+            node->data=temp->data;
+
+            // remove the inorder successor
+            node->right=removeNode(node->right,temp->data);
+
+        }
+    }
+    
+    // If the tree had only one Node then return
+    if(node==nullptr)
+        return node;
+
+    node->height = max(height(node->left), height(node->right))+1;
+
+    return doBalanced(node);
+}
 
 Node<OrderDelete>* AVLTree<OrderDelete>::searchNode(Node<OrderDelete>* node, const OrderDelete& data) {
     if(node == nullptr)
@@ -1141,3 +1351,5 @@ void  AVLTree<OrderDelete>::writePostorder(Node<OrderDelete> * node,ofstream & o
     outFile << node->data.orderId<<endl;
 
 }
+
+#endif

@@ -1,7 +1,11 @@
 #ifndef _MESSAGEIMP_H_
 #define _MESSAGEIMP_H_
 
-#include "../utility/include/AVLTree.hpp"
+#include<string>
+#include<fstream>
+#include<sstream>
+
+using namespace std;
 
 class MessageImp{
 public:
@@ -20,9 +24,6 @@ protected:
     
     virtual void fileRead(ifstream & inFile)=0;
     
-    AVLTree<AddOrder> AddOrderTree;
-    AVLTree<OrderExecute> OrderExecuteTree;
-    AVLTree<OrderDelete> OrderDeleteTree;
 
 };
 

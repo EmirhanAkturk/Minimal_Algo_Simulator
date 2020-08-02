@@ -1,8 +1,8 @@
-// enum{
-//     ADD_ORDER_TYPE='A',
-//     ORDER_EXECUTE_TYPE='E',
-//     ORDER_DELETE_TYPE='D'
-// };
+enum{
+    ADD_ORDER_TYPE='A',
+    ORDER_EXECUTE_TYPE='E',
+    ORDER_DELETE_TYPE='D'
+};
 
 struct AddOrder
 {

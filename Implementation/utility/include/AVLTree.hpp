@@ -1,5 +1,5 @@
-#ifndef _AVLTREE_H_
-#define _AVLTREE_H_
+#ifndef _AVLTREE_HPP_
+#define _AVLTREE_HPP_
 //#pragma once
 
 #include<iostream>
@@ -7,6 +7,11 @@
 #include "../../include/SearchPod.h"
 
 using namespace std;
+enum{
+    INORDER=1,
+    PREORDER=2,
+    POSTORDER=3
+};
 
 template<class T>
 class Node;
@@ -59,6 +64,19 @@ public:
         else return false;
     }
 
+    bool remove(uint64_t orderId){
+        // Node<AddOrder> *query = searchNode(root, orderId);
+        // if(query==nullptr){
+        //     return false;
+        // }
+        root = removeNode(root,orderId);//return değerlerini kontrol et!!
+        
+        // if(root!=nullptr)
+        //     return true;
+        
+        return true;
+    }
+
     bool search(const AddOrder& data) {
         Node<AddOrder> *query = searchNode(root, data);
         
@@ -107,7 +125,9 @@ private:
 
 
     Node<AddOrder>* insertNode(Node<AddOrder>* node, const AddOrder& data);
+
     Node<AddOrder>* removeNode(Node<AddOrder>* node,const AddOrder& data);
+    Node<AddOrder>* removeNode(Node<AddOrder>* node,uint64_t orderId);
 
     Node<AddOrder>* searchNode(Node<AddOrder>* node, const AddOrder& data);
     Node<AddOrder>* searchNode(Node<AddOrder>* node, uint64_t orderId);
@@ -181,6 +201,15 @@ public:
         else return false;
     }
 
+    bool remove(uint64_t orderId){
+        root = removeNode(root,orderId);//return değerlerini kontrol et!!
+        
+        if(root!=nullptr)
+            return true;
+        
+        else return false;
+    }
+
     bool search(const OrderExecute& data) {
         Node<OrderExecute> *query = searchNode(root, data);
         
@@ -229,7 +258,9 @@ private:
     Node<OrderExecute>* root;
 
     Node<OrderExecute>* insertNode(Node<OrderExecute>* node, const OrderExecute& data);
+
     Node<OrderExecute>* removeNode(Node<OrderExecute>* node,const OrderExecute& data);
+    Node<OrderExecute>* removeNode(Node<OrderExecute>* node,uint64_t orderId);
 
     Node<OrderExecute>* searchNode(Node<OrderExecute>* node, const OrderExecute& data);
     Node<OrderExecute>* searchNode(Node<OrderExecute>* node, uint64_t orderId);
@@ -302,6 +333,15 @@ public:
         else return false;
     }
 
+    bool remove(uint64_t orderId){
+        root = removeNode(root,orderId);//return değerlerini kontrol et!!
+        
+        if(root!=nullptr)
+            return true;
+        
+        else return false;
+    }
+
     bool search(const OrderDelete& data) {
         Node<OrderDelete> *query = searchNode(root, data);
         
@@ -350,7 +390,9 @@ private:
     Node<OrderDelete>* root;
 
     Node<OrderDelete>* insertNode(Node<OrderDelete>* node, const OrderDelete& data);
+
     Node<OrderDelete>* removeNode(Node<OrderDelete>* node,const OrderDelete& data);
+    Node<OrderDelete>* removeNode(Node<OrderDelete>* node,uint64_t orderId);
 
     Node<OrderDelete>* searchNode(Node<OrderDelete>* node, const OrderDelete& data);
     Node<OrderDelete>* searchNode(Node<OrderDelete>* node, uint64_t orderId);
@@ -378,5 +420,5 @@ private:
     void  writePostorder(Node<OrderDelete> * node,ofstream & outFile)const;
 };
 
-#include "AVL.inl"
+//#include "AVL.inl"
 #endif
