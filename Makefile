@@ -22,5 +22,11 @@ Message.o: Client/src/Message.cpp Client/src/../include/Message.h \
  Client/src/../../Implementation/include/MessageImp.h
 	g++-10 -c ./Client/src/Message.cpp
 
-clear:
+run: main
+	./main
+
+clear.o:
 	rm *.o
+
+clear.txt:
+	rm *.txt
