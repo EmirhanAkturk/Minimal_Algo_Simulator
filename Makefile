@@ -1,32 +1,27 @@
-# run: main
-# 	./main
+OFILES = TWAP.o main.o
+TARGET = main
+COMPILER = g++-10
+TXTFILES = addOrder.txt orderDelete.txt OrderExecuted.txt
 
-main: main.o Search.o Message.o
-	g++-10 main.o Search.o Message.o -o main
+$(TARGET): $(OFILES)
+	$(COMPILER) $(OFILES) -o $@
 
-main.o: main.cpp Client/include/Message.h Implementation/include/Search.h \
- Implementation/include/MessageImp.h \
- Implementation/include/../utility/include/AVLTree.hpp \
- Implementation/include/../utility/include/../../include/SearchPod.h
-	g++-10 -c main.cpp
+clean.o:
+	rm $(OFILES)
 
-Search.o: Implementation/src/Search.cpp \
- Implementation/src/../include/search.h \
- Implementation/src/../include/MessageImp.h \
- Implementation/src/../include/../utility/include/AVLTree.hpp \
- Implementation/src/../include/../utility/include/../../include/SearchPod.h \
- Implementation/src/../utility/include/AVLTree.inl
-	g++-10 -c ./Implementation/src/Search.cpp
-
-Message.o: Client/src/Message.cpp Client/src/../include/Message.h \
- Client/src/../../Implementation/include/MessageImp.h
-	g++-10 -c ./Client/src/Message.cpp
-
-run: main
-	./main
-
-clear.o:
-	rm *.o
-
-clear.txt:
-	rm *.txt
+clean.txt:
+	rm $(TXTFILES)
+# below this is the output of "g++10 -MM":
+main.o: main.cpp Implementation/TWAP/inc/TWAP.hpp \
+ Implementation/TWAP/inc/../../AbstractImp/inc/AbstractImp.hpp \
+ Implementation/TWAP/inc/../../utility/AVLTree/include/AVLTree.hpp \
+ Implementation/TWAP/inc/../../utility/AVLTree/include/AVLTreePod.hpp
+	g++-10 main.cpp -c
+TWAP.o: Implementation/TWAP/src/TWAP.cpp \
+ Implementation/TWAP/src/../inc/TWAP.hpp \
+ Implementation/TWAP/src/../inc/../../AbstractImp/inc/AbstractImp.hpp \
+ Implementation/TWAP/src/../inc/../../utility/AVLTree/include/AVLTree.hpp \
+ Implementation/TWAP/src/../inc/../../utility/AVLTree/include/AVLTreePod.hpp \
+ Implementation/TWAP/src/../../utility/AVLTree/src/AVLTree.cpp \
+ Implementation/TWAP/src/../../utility/AVLTree/src/../include/AVLTree.hpp
+	g++-10 Implementation/TWAP/src/TWAP.cpp -c
