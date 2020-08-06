@@ -1,13 +1,13 @@
-#include "../inc/TWAP.hpp"
+#include "../inc/VWAP.hpp"
 
-uint32_t TWAP:: totalPrice=0;
-int TWAP:: messageCount =0;
+uint32_t VWAP:: totalPrice=0;
+int VWAP:: messageCount =0;
 
 // AVLTree<AddOrder> Tree::AddOrderTree;
 // AVLTree<OrderDelete> Tree::OrderDeleteTree;
 // AVLTree<OrderExecuted> Tree::OrderExecutedTree;
 
-void TWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
+void VWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
     if(node == nullptr)
         return;
     
@@ -19,14 +19,14 @@ void TWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
     calculate(node->right);
 }
 
-double TWAP:: compute(const char *file ){
+double VWAP:: compute(const char *file ){
     if(Tree::isRead == false){
-        cout<<"TWAP reading...\n";
+        cout<<"VWAP reading...\n";
         fileRead(file);
         Tree::isRead = true;
     }
     calculate(Tree::AddOrderTree.getRoot());
-    ofstream outFile("TwapAddOrder.txt");
+    ofstream outFile("VwapAddOrder.txt");
     Tree::AddOrderTree.writeFile(outFile,INORDER);
     return (static_cast<double>(totalPrice)/static_cast<double>(messageCount));
 }

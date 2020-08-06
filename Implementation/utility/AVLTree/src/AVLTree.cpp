@@ -1,11 +1,11 @@
-#ifndef _AVLTREE_INL_
-#define _AVLTREE_INL_
+#ifndef _AVLTREE_CPP_
+#define _AVLTREE_CPP_
 
 #include "../include/AVLTree.hpp"
 
-AVLTree<AddOrder> AddOrderTree;
-AVLTree<OrderDelete> OrderDeleteTree;
-AVLTree<OrderExecuted> OrderExecutedTree;
+// AVLTree<AddOrder> AddOrderTree;
+// AVLTree<OrderDelete> OrderDeleteTree;
+// AVLTree<OrderExecuted> OrderExecutedTree;
 
 template<class T>
 inline void addMessage(AVLTree<T>& tree,const T& message){
@@ -97,7 +97,7 @@ void fileAddOrder(istringstream &inString,int flag){
     inString>>messageA.orderPrice;
 
     //AddOrderTree.insert(messageA);
-    addMessage(AddOrderTree,messageA);
+    addMessage(Tree::AddOrderTree,messageA);
 }
 
 
@@ -113,7 +113,7 @@ void fileOrderExecute(istringstream &inString,int flag){
     inString>>messageE.orderId;
 
     //OrderExecutedTree.insert(messageE);
-    addMessage(OrderExecutedTree,messageE);
+    addMessage(Tree::OrderExecutedTree,messageE);
 }
 
 
@@ -129,7 +129,7 @@ void fileOrderDelete(istringstream &inString,int flag){
     inString>>messageD.orderId;
 
     //OrderDeleteTree.insert(messageD);
-    addMessage(OrderDeleteTree,messageD);
+    addMessage(Tree::OrderDeleteTree,messageD);
 }
 
 /* 

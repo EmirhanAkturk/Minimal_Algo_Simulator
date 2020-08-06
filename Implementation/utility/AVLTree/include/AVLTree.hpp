@@ -468,9 +468,12 @@ private:
     void  writePostorder(Node * node,ofstream & outFile)const;
 };
 
-// AVLTree<AddOrder> AddOrderTree;
-// AVLTree<OrderDelete> OrderDeleteTree;
-// AVLTree<OrderExecuted> OrderExecutedTree;
-
+class Tree{
+public:
+    static AVLTree<AddOrder> AddOrderTree;
+    static AVLTree<OrderDelete> OrderDeleteTree;
+    static AVLTree<OrderExecuted> OrderExecutedTree;
+    static bool isRead;
+};
 //#include "AVLTree.inl"
 #endif
