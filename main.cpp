@@ -1,24 +1,21 @@
-#include "Implementation/TWAP/inc/TWAP.hpp"
-#include "Implementation/VWAP/inc/VWAP.hpp"
-AVLTree<AddOrder> Tree::AddOrderTree;
-AVLTree<OrderDelete> Tree::OrderDeleteTree;
-AVLTree<OrderExecuted> Tree::OrderExecutedTree;
-bool Tree::isRead=false;
+#include "Implementation/AlgoHandler/inc/AlgoHandler.hpp"
 
 int main(){
-    AbstractImp * imp = new TWAP();
+    AbstractImp * imp = new AlgoHandler();
 
     const char *file = "documentation/AddOrderMessage.txt";
 
-    double averagePrice=imp->compute(file);
+    cout<<"Twap calculating...\n";
 
-    cout<<"AveragePrice:"<<averagePrice<<endl;
+    double result=imp->compute(file,TWAP_CALCULATE);
 
-    imp = new VWAP();
+    cout<<"TWAP result:"<<result<<endl;
 
-    averagePrice=imp->compute(file);
+    cout<<"VWAP calculating...\n";
 
-    cout<<"AveragePrice:"<<averagePrice<<endl;
+    result=imp->compute(file,VWAP_CALCULATE);
+
+    cout<<"VWAP result:"<<result<<endl;
 
     return 0;
 }

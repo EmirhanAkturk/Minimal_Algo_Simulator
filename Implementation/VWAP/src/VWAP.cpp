@@ -6,8 +6,13 @@ int VWAP:: messageCount =0;
 // AVLTree<AddOrder> Tree::AddOrderTree;
 // AVLTree<OrderDelete> Tree::OrderDeleteTree;
 // AVLTree<OrderExecuted> Tree::OrderExecutedTree;
+double VWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
+    calculateTotalPrice(node);
+    
+    return (static_cast<double>(totalPrice)/static_cast<double>(messageCount));
+}
 
-void VWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
+void VWAP:: calculateTotalPrice(AVLTree<AddOrder>::Node* node)const{
     if(node == nullptr)
         return;
     
@@ -17,16 +22,4 @@ void VWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
     calculate(node->left);
     
     calculate(node->right);
-}
-
-double VWAP:: compute(const char *file ){
-    if(Tree::isRead == false){
-        cout<<"VWAP reading...\n";
-        fileRead(file);
-        Tree::isRead = true;
-    }
-    calculate(Tree::AddOrderTree.getRoot());
-    ofstream outFile("VwapAddOrder.txt");
-    Tree::AddOrderTree.writeFile(outFile,INORDER);
-    return (static_cast<double>(totalPrice)/static_cast<double>(messageCount));
 }

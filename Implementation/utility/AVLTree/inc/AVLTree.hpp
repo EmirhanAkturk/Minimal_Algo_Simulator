@@ -18,18 +18,18 @@ enum PRINT{
 template<class T>
 class AVLTree;
 
-void fileRead(const char * file );
-inline string readLine(ifstream& inFile);
+// void fileRead(const char * file );
+// inline string readLine(ifstream& inFile);
 
-void findValues(const string & line);
-int findColumn(istringstream& inString,int flag,int collumn);
+// void findValues(const string & line);
+// int findColumn(istringstream& inString,int flag,int collumn);
 
-void fileAddOrder(istringstream &inString,int flag);
-void fileOrderExecute(istringstream &inString,int flag);
-void fileOrderDelete(istringstream &inString,int flag);
+// void fileAddOrder(istringstream &inString,int flag);
+// void fileOrderExecute(istringstream &inString,int flag);
+// void fileOrderDelete(istringstream &inString,int flag);
 
-template<class T>
-inline void addMessage(AVLTree<T>& tree,const T& message);
+// template<class T>
+// inline void addMessage(AVLTree<T>& tree,const T& message);
 
 /* 
 ############################################
@@ -51,11 +51,11 @@ public:
     orderPrice{newOrderPrice},right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
     
-    uint64_t orderId;
+    int height;
     uint32_t orderPrice;
+    uint64_t orderId;
     Node *right;
     Node *left;
-    int height;
 };
     
     AVLTree(){
@@ -367,7 +367,7 @@ public:
         root = insertNode(root,data);
     }
 
-        bool remove(const AddOrder& data){
+    bool remove(const AddOrder& data){
         Node *query = searchNode(root, data.orderId);
         if(query==nullptr){
             return false;//If not found, it cannot be deleted
@@ -468,12 +468,16 @@ private:
     void  writePostorder(Node * node,ofstream & outFile)const;
 };
 
-class Tree{
-public:
-    static AVLTree<AddOrder> AddOrderTree;
-    static AVLTree<OrderDelete> OrderDeleteTree;
-    static AVLTree<OrderExecuted> OrderExecutedTree;
-    static bool isRead;
-};
+// struct Tree{//buradakiler static olmayacak
+
+//     static AVLTree<AddOrder> AddOrderTree;
+//     static AVLTree<OrderDelete> OrderDeleteTree;
+//     static AVLTree<OrderExecuted> OrderExecutedTree;
+//     static bool isRead;
+
+// private:
+//     Tree();
+//     Tree(Tree&);
+// };
 //#include "AVLTree.inl"
 #endif

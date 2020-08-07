@@ -4,6 +4,11 @@ enum MessageType{
     ORDER_DELETE_TYPE='D'
 };
 
+enum choice{
+    TWAP_CALCULATE='T',
+    VWAP_CALCULATE='V'
+};
+
 struct AddOrder
 {
     uint64_t orderId;
