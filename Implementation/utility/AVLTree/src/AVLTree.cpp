@@ -8,6 +8,371 @@
 // AVLTree<OrderExecuted> OrderExecutedTree;
 
 
+
+/* 
+###################################
+Template Specialization for Seconds
+###################################
+ */
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::makeEmpty(Node *node){
+    if(node == nullptr)
+        return nullptr;
+    
+    else{
+        makeEmpty(node->left);
+        makeEmpty(node->right);
+        delete node;
+    }
+    return nullptr;
+}
+
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::insertNode(Node* node, const Seconds& newData){
+    
+    Node *query= searchNode(node,newData.timestamp);
+
+    if(query!=nullptr){
+        
+        return node;
+    }
+
+    /* 1. Perform the normal BST insertion */
+    if(node == nullptr)
+    {
+        Node *temp=new Node(newData);
+        return temp;
+    }
+
+    if(newData.timestamp < node->timestamp){
+        node->left = insertNode(node->left,newData);
+    }
+
+    else if(newData.timestamp > node->timestamp){
+        node->right = insertNode(node->right, newData);
+    }   
+    
+    else return node;
+
+    /* 2. Update height of this ancestor Node */
+    node->height=max(height(node->left), height(node->right))+1;
+
+    /* 3. Get the balance factor of this ancestor 
+    Node to check whether this Node became 
+    unbalanced */
+    
+    return doBalanced(node,newData);
+}
+
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::removeNode(Node* node,uint32_t timestamp) {
+    
+    if(node == nullptr)// Element not found
+        return nullptr;
+    
+    // If the value to be deleted is smaller than the root's value,
+    // then it lies in left subtree
+    else if(timestamp < node->timestamp)
+        node->left = removeNode(node->left,timestamp);
+
+    // If the value to be deleted is greater than the root's value,
+    // then it lies in right subtree
+    else if(timestamp > node->timestamp)
+        node->right = removeNode(node->right,timestamp);
+    
+    // if value is same as root's value, then This is the Node
+    // to be deleted
+    else 
+    {   
+        // Node with only one child or no child
+        if( (node->left == nullptr) || (node->right == nullptr) ) {
+            
+            Node * temp;
+
+            if(node->left == nullptr){
+                temp = node->right;
+                delete node;
+            }
+            else{
+                temp=node->left;
+                delete node;
+            }
+
+            // No child case
+            if(temp == nullptr){
+                temp = node;
+                node = nullptr;
+            }
+
+            else {// One child case
+                node = temp; // Copy the contents of the non-empty child
+                temp = nullptr;
+            }
+            //temp = nullptr;
+
+        }
+        else{
+            // Node with two children: Get the inorder successor (smallest
+            // in the right subtree)
+
+            Node * temp = findMin(node->right);
+
+            // Copy the inorder successor's data to this Node
+            node->timestamp=temp->timestamp;
+
+            // remove the inorder successor
+            node->right=removeNode(node->right,temp->timestamp);
+
+        }
+    }
+    
+    // If the tree had only one Node then return
+    if(node==nullptr)
+        return node;
+
+    node->height = max(height(node->left), height(node->right))+1;
+
+    return doBalanced(node);
+}
+
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::searchNode(Node* node, uint32_t timestamp) {
+    if(node == nullptr)
+        return nullptr;
+    
+    else if(node->timestamp == timestamp)
+        return node;
+        
+    else if(timestamp > node->timestamp)
+        return searchNode(node->right, timestamp);
+
+    else return searchNode(node->left, timestamp);
+
+}
+
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::findMin(Node* node)
+{
+    if(node == nullptr)
+        return nullptr;
+    else if(node->left == nullptr)
+        return node;
+    else
+        return findMin(node->left);
+}
+
+
+AVLTree<Seconds>::Node * AVLTree<Seconds>::findMax(Node* node) {
+    if(node == nullptr)
+        return nullptr;
+    else if(node->right == nullptr)
+        return node;
+    else
+        return findMax(node->right);
+}
+
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::doBalanced(Node *node){
+    
+    int balance = getBalance(node);
+    // If this Node becomes unbalanced, then 
+    // there are 4 cases 
+
+    // Left Left Case 
+    if (balance > 1 && getBalance(node->left)>=0) 
+        return rightRotate(node); 
+
+    // Left Right Case 
+    if (balance > 1 && getBalance(node->left)<0) 
+    { 
+        node->left = leftRotate(node->left); 
+        return rightRotate(node); 
+    } 
+
+    // Right Right Case 
+    if (balance < -1 && getBalance(node->right)<=0) 
+        return leftRotate(node); 
+
+    // Right Left Case 
+    if (balance < -1 && getBalance(node->left)>0) 
+    { 
+        node->right = rightRotate(node->right); 
+        return leftRotate(node); 
+    } 
+
+    /* return the (unchanged) Node pointer */
+    return node;
+
+}
+
+
+AVLTree<Seconds>::Node* AVLTree<Seconds>::doBalanced(Node *node,const Seconds& newData){
+
+    int balance = getBalance(node);
+
+    // If this Node becomes unbalanced, then 
+    // there are 4 cases 
+
+    // Left Left Case 
+    if (balance > 1 && newData.timestamp < node->left->timestamp) 
+        return rightRotate(node); 
+
+    // Right Right Case 
+    if (balance < -1 && newData.timestamp > node->right->timestamp) 
+        return leftRotate(node); 
+
+    // Left Right Case 
+    if (balance > 1 && newData.timestamp > node->left->timestamp) 
+    { 
+        node->left = leftRotate(node->left); 
+        return rightRotate(node); 
+    } 
+
+    // Right Left Case 
+    if (balance < -1 && newData.timestamp < node->right->timestamp) 
+    { 
+        node->right = rightRotate(node->right); 
+        return leftRotate(node); 
+    } 
+
+    return node;
+}
+
+
+AVLTree<Seconds>::Node * AVLTree<Seconds>::rightRotate(Node *node) 
+{ 
+    Node *x = node->left; 
+    Node *T2 = x->right; 
+
+    // Perform rotation 
+    x->right = node; 
+    node->left = T2; 
+
+    // Update heights 
+    node->height = max(height(node->left), 
+                    height(node->right)) + 1; 
+
+    x->height = max(height(x->left), 
+                    height(x->right)) + 1; 
+
+    // Return new root 
+    return x; 
+} 
+
+
+AVLTree<Seconds>::Node * AVLTree<Seconds>::leftRotate(Node *node) 
+{ 
+    Node *y = node->right; 
+    Node *x = y->left; 
+
+    // Perform rotation 
+    y->left = node; 
+    node->right = x; 
+
+    // Update heights 
+    node->height = max(height(node->left),	 
+                    height(node->right)) + 1; 
+    y->height = max(height(y->left), 
+                    height(y->right)) + 1; 
+
+    // Return new root 
+    return y; 
+} 
+
+
+int AVLTree<Seconds>:: getBalance(Node* node){
+    if (node == NULL) 
+        return 0; 
+    return height(node->left) - height(node->right); 
+}
+
+
+int AVLTree<Seconds>::height(Node *node) 
+{ 
+    if (node == nullptr) 
+        return 0; 
+
+    return node->height; 
+} 
+
+
+void AVLTree<Seconds>::inorder(Node* node)const{
+    if(node == nullptr)
+        return;
+
+    inorder(node->left);
+    cout << node->timestamp<<endl;
+    inorder(node->right);
+}
+
+
+void AVLTree<Seconds>::preorder(Node* node)const{
+    if(node == nullptr)
+        return;
+
+    cout << node->timestamp<<endl;
+
+    preorder(node->left);
+    preorder(node->right);
+}
+
+
+void AVLTree<Seconds>::postorder(Node* node)const{
+    if(node == nullptr)
+        return;
+
+    postorder(node->left);
+    postorder(node->right);
+    cout << node->timestamp<<endl;
+}
+
+
+void  AVLTree<Seconds>::writeInorder(Node * node,ofstream & outFile)const{
+    if(node == nullptr)
+        return;
+    
+    // first recur on left subtree 
+    writeInorder(node->left,outFile);
+
+    // then deal with the Node 
+    outFile << node->timestamp<<endl;
+    // now recur on right subtree 
+    writeInorder(node->right,outFile);
+}
+
+
+void  AVLTree<Seconds>::writePreorder(Node * node,ofstream & outFile)const{
+    if(node == nullptr)
+        return;
+    
+    // first recur on node
+    outFile << node->timestamp<<endl;
+
+
+    // then deal with the left subtree
+    writePreorder(node->left,outFile);
+
+    // now recur on right subtree 
+    writePreorder(node->right,outFile);
+}
+
+
+void  AVLTree<Seconds>::writePostorder(Node * node,ofstream & outFile)const{
+    if(node == nullptr)
+        return;
+    
+    // first recur on left subtree
+    writePostorder(node->left,outFile);
+    
+    // now recur on right subtree 
+    writePostorder(node->right,outFile);
+    
+    // then deal with the Node 
+    outFile << node->timestamp<<endl;
+
+}
+
+
 /* 
 ###################################
 Template Specialization for AddOrder
@@ -36,6 +401,7 @@ AVLTree<AddOrder>::Node * AVLTree<AddOrder>::insertNode(Node * node, const AddOr
     if(query!=nullptr){
         if(query->orderPrice != newData.orderPrice){
             query->orderPrice=newData.orderPrice;//update price value
+            query->nanosecond=newData.nanosecond;//update nanosecond value
         }
         
         return node;
@@ -121,8 +487,10 @@ AVLTree<AddOrder>::Node* AVLTree<AddOrder>::removeNode(Node* node,uint64_t order
             Node * temp = findMin(node->right);
 
             // Copy the inorder successor's data to this Node
+            node->nanosecond=temp->nanosecond;
             node->orderId=temp->orderId;
             node->orderPrice=temp->orderPrice;
+
 
             // remove the inorder successor
             node->right=removeNode(node->right,temp->orderId);
@@ -316,7 +684,7 @@ void AVLTree<AddOrder>::inorder(Node* node)const{
         return;
 
     inorder(node->left);
-    cout << node->orderId<<";"<<node->orderPrice<<endl;
+    cout << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
     inorder(node->right);
 }
 
@@ -325,7 +693,7 @@ void AVLTree<AddOrder>::preorder(Node* node)const{
     if(node == nullptr)
         return;
 
-    cout << node->orderId<<";"<<node->orderPrice<<endl;;
+    cout << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
 
     preorder(node->left);
     preorder(node->right);
@@ -338,7 +706,7 @@ void AVLTree<AddOrder>::postorder(Node* node)const{
 
     postorder(node->left);
     postorder(node->right);
-    cout << node->orderId<<";"<<node->orderPrice<<endl;;
+    cout << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
 }
 
 
@@ -350,7 +718,7 @@ void  AVLTree<AddOrder>::writeInorder(Node * node,ofstream & outFile)const{
     writeInorder(node->left,outFile);
 
     // then deal with the Node 
-    outFile << node->orderId<<";"<<node->orderPrice<<endl;
+    outFile << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
     // now recur on right subtree 
     writeInorder(node->right,outFile);
 }
@@ -361,7 +729,7 @@ void  AVLTree<AddOrder>::writePreorder(Node * node,ofstream & outFile)const{
         return;
     
     // first recur on node
-    outFile << node->orderId<<";"<<node->orderPrice<<endl;
+    outFile << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
 
     // then deal with the left subtree
     writePreorder(node->left,outFile);
@@ -382,7 +750,7 @@ void  AVLTree<AddOrder>::writePostorder(Node * node,ofstream & outFile)const{
     writePostorder(node->right,outFile);
     
     // then deal with the Node 
-    outFile << node->orderId<<";"<<node->orderPrice<<endl;
+    outFile << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
 
 }
 
@@ -496,6 +864,7 @@ AVLTree<OrderExecuted>::Node* AVLTree<OrderExecuted>::removeNode(Node* node,uint
             Node * temp = findMin(node->right);
 
             // Copy the inorder successor's data to this Node
+            node->nanosecond=temp->nanosecond;
             node->orderId=temp->orderId;
 
             // remove the inorder successor
@@ -679,7 +1048,7 @@ void AVLTree<OrderExecuted>::inorder(Node* node)const{
         return;
 
     inorder(node->left);
-    cout << node->orderId<<endl;
+    cout <<node->nanosecond<<";"<<node->orderId<<endl;
     inorder(node->right);
 }
 
@@ -688,7 +1057,7 @@ void AVLTree<OrderExecuted>::preorder(Node* node)const{
     if(node == nullptr)
         return;
 
-    cout << node->orderId<<endl;
+    cout <<node->nanosecond<<";"<<node->orderId<<endl;
 
     preorder(node->left);
     preorder(node->right);
@@ -701,7 +1070,7 @@ void AVLTree<OrderExecuted>::postorder(Node* node)const{
 
     postorder(node->left);
     postorder(node->right);
-    cout << node->orderId<<endl;
+    cout <<node->nanosecond<<";"<<node->orderId<<endl;
 }
 
 
@@ -713,7 +1082,7 @@ void  AVLTree<OrderExecuted>::writeInorder(Node * node,ofstream & outFile)const{
     writeInorder(node->left,outFile);
 
     // then deal with the Node 
-    outFile << node->orderId<<endl;
+    outFile <<node->nanosecond<< ";"<<node->orderId<<endl;
     // now recur on right subtree 
     writeInorder(node->right,outFile);
 }
@@ -724,7 +1093,7 @@ void  AVLTree<OrderExecuted>::writePreorder(Node * node,ofstream & outFile)const
         return;
     
     // first recur on node
-    outFile << node->orderId<<endl;
+    outFile <<node->nanosecond<< ";"<<node->orderId<<endl;
 
     // then deal with the left subtree
     writePreorder(node->left,outFile);
@@ -745,7 +1114,7 @@ void  AVLTree<OrderExecuted>::writePostorder(Node * node,ofstream & outFile)cons
     writePostorder(node->right,outFile);
     
     // then deal with the Node 
-    outFile << node->orderId<<endl;
+    outFile <<node->nanosecond<< ";"<<node->orderId<<endl;
 
 }
 
@@ -861,6 +1230,7 @@ AVLTree<OrderDelete>::Node* AVLTree<OrderDelete>::removeNode(Node* node,uint64_t
             Node * temp = findMin(node->right);
 
             // Copy the inorder successor's data to this Node
+            node->nanosecond=temp->nanosecond;
             node->orderId=temp->orderId;
 
             // remove the inorder successor
@@ -1044,7 +1414,7 @@ void AVLTree<OrderDelete>::inorder(Node* node)const{
         return;
 
     inorder(node->left);
-    cout << node->orderId<<endl;
+    cout << node->nanosecond<< ";" <<node->orderId<<endl;
     inorder(node->right);
 }
 
@@ -1053,7 +1423,7 @@ void AVLTree<OrderDelete>::preorder(Node* node)const{
     if(node == nullptr)
         return;
 
-    cout << node->orderId<<endl;
+    cout << node->nanosecond<< ";" <<node->orderId<<endl;
 
     preorder(node->left);
     preorder(node->right);
@@ -1066,7 +1436,7 @@ void AVLTree<OrderDelete>::postorder(Node* node)const{
 
     postorder(node->left);
     postorder(node->right);
-    cout << node->orderId<<endl;
+    cout << node->nanosecond<< ";" <<node->orderId<<endl;
 }
 
 
@@ -1078,7 +1448,7 @@ void  AVLTree<OrderDelete>::writeInorder(Node * node,ofstream & outFile)const{
     writeInorder(node->left,outFile);
 
     // then deal with the Node 
-    outFile << node->orderId<<endl;
+    outFile << node->nanosecond<< ";"<<node->orderId<<endl;
     // now recur on right subtree 
     writeInorder(node->right,outFile);
 }
@@ -1089,7 +1459,8 @@ void  AVLTree<OrderDelete>::writePreorder(Node * node,ofstream & outFile)const{
         return;
     
     // first recur on node
-    outFile << node->orderId<<endl;
+    outFile << node->nanosecond<< ";"<<node->orderId<<endl;
+
 
     // then deal with the left subtree
     writePreorder(node->left,outFile);
@@ -1110,7 +1481,7 @@ void  AVLTree<OrderDelete>::writePostorder(Node * node,ofstream & outFile)const{
     writePostorder(node->right,outFile);
     
     // then deal with the Node 
-    outFile << node->orderId<<endl;
+    outFile << node->nanosecond<< ";"<<node->orderId<<endl;
 
 }
 

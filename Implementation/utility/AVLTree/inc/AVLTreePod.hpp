@@ -1,4 +1,5 @@
 enum MessageType{
+    SECONDS='T',
     ADD_ORDER_TYPE='A',
     ORDER_EXECUTED_TYPE='E',
     ORDER_DELETE_TYPE='D'

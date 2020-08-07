@@ -3,6 +3,7 @@
 int main(){
     AbstractImp * imp = new AlgoHandler();
 
+    //const char *file = "documentation/SecondsMessage.txt";
     const char *file = "documentation/AddOrderMessage.txt";
 
     cout<<"Twap calculating...\n";

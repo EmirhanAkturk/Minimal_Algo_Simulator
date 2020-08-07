@@ -11,6 +11,7 @@ public:
     virtual double compute(const char* file,char calculateChoice)override;
     
 private:
+    AVLTree<Seconds>SecondsTree;
     AVLTree<AddOrder>AddOrderTree;
     AVLTree<OrderDelete>OrderDeleteTree;
     AVLTree<OrderExecuted>OrderExecutedTree;

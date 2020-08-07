@@ -5,7 +5,9 @@ inline void FileManager::addMessage(AVLTree<T>& tree,const T& message){
     tree.insert(message);
 }
 
-void  FileManager::fileRead(const char * file, AVLTree<AddOrder>&AOTree,
+void  FileManager::fileRead(const char * file,
+                            AVLTree<Seconds>&STree,
+                            AVLTree<AddOrder>&AOTree,
                             AVLTree<OrderExecuted>&OETree,
                             AVLTree<OrderDelete>&ODTree)
 {
@@ -14,7 +16,7 @@ void  FileManager::fileRead(const char * file, AVLTree<AddOrder>&AOTree,
     while(!inFile.eof()){
         // clock_t start=clock();
         string line=readLine(inFile);
-        findValues(line,AOTree,OETree,ODTree);
+        findValues(line,STree,AOTree,OETree,ODTree);
     
         // if(line == ";")//tekrar bak
         //         break; */
@@ -25,11 +27,13 @@ void  FileManager::fileRead(const char * file, AVLTree<AddOrder>&AOTree,
 inline string FileManager::readLine(ifstream& inFile){
     string line;
     inFile>>line;
+    //cout<<line<<endl;
     return line;
 }
 
 
 void FileManager::findValues(const string & line,
+                        AVLTree<Seconds>&STree,
                         AVLTree<AddOrder>&AOTree,
                         AVLTree<OrderExecuted>&OETree,
                         AVLTree<OrderDelete>&ODTree)
@@ -40,7 +44,7 @@ void FileManager::findValues(const string & line,
     flag=findColumn(inString,flag,2);
     
     if(flag!=2){
-        cerr<<"Incorrect column value!!\n";
+        cerr<<flag<<"Incorrect column value!!\n";
         exit(1);
     }
 
@@ -48,6 +52,11 @@ void FileManager::findValues(const string & line,
     inString>>c;
 
     switch(c){
+        case SECONDS:{
+            Seconds messageT = fileSeconds(inString,flag);
+            addMessage(STree,messageT);
+            break;
+            }
         case ADD_ORDER_TYPE:{ 
             AddOrder messageA = fileAddOrder(inString,flag);
             addMessage(AOTree,messageA);
@@ -85,9 +94,31 @@ int FileManager::findColumn(istringstream& inString,int flag,int collumn){
 }
 
 
+Seconds FileManager::fileSeconds(istringstream &inString,int flag){
+    
+    Seconds messageT;
+    
+    flag=findColumn(inString,flag,3);
+    if(flag!=3){
+        cerr<<"Incorrect column value!!\n";
+        exit(1);
+    }
+    inString>>messageT.timestamp;
+
+    return messageT;
+}
+
+
 AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
     
     AddOrder messageA;
+    
+    flag=findColumn(inString,flag,3);
+    if(flag!=3){
+        cerr<<"Incorrect column value!!\n";
+        exit(1);
+    }
+    inString>>messageA.nanosecond;
 
     flag=findColumn(inString,flag,4);
     if(flag!=4){
@@ -110,6 +141,13 @@ AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
 OrderExecuted FileManager::fileOrderExecute(istringstream &inString,int flag){
     OrderExecuted messageE;
 
+    flag=findColumn(inString,flag,3);
+    if(flag!=3){
+        cerr<<"Incorrect column value!!\n";
+        exit(1);
+    }
+    inString>>messageE.nanosecond;
+
     flag=findColumn(inString,flag,4);
     if(flag!=4){
         cerr<<"Incorrect column value!!\n";
@@ -124,6 +162,13 @@ OrderExecuted FileManager::fileOrderExecute(istringstream &inString,int flag){
 
 OrderDelete FileManager::fileOrderDelete(istringstream &inString,int flag){
     OrderDelete messageD;
+
+    flag=findColumn(inString,flag,3);
+    if(flag!=3){
+        cerr<<"Incorrect column value!!\n";
+        exit(1);
+    }
+    inString>>messageD.nanosecond;
 
     flag=findColumn(inString,flag,4);
     if(flag!=4){
