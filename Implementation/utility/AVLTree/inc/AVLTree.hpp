@@ -9,27 +9,9 @@
 #include "AVLTreePod.hpp"
 
 using namespace std;
-enum PRINT{
-    INORDER=1,
-    PREORDER=2,
-    POSTORDER=3
-};
 
 template<class T>
 class AVLTree;
-
-// void fileRead(const char * file );
-// inline string readLine(ifstream& inFile);
-
-// void findValues(const string & line);
-// int findColumn(istringstream& inString,int flag,int collumn);
-
-// void fileAddOrder(istringstream &inString,int flag);
-// void fileOrderExecute(istringstream &inString,int flag);
-// void fileOrderDelete(istringstream &inString,int flag);
-
-// template<class T>
-// inline void addMessage(AVLTree<T>& tree,const T& message);
 
 /* 
 ############################################
@@ -468,16 +450,5 @@ private:
     void  writePostorder(Node * node,ofstream & outFile)const;
 };
 
-// struct Tree{//buradakiler static olmayacak
-
-//     static AVLTree<AddOrder> AddOrderTree;
-//     static AVLTree<OrderDelete> OrderDeleteTree;
-//     static AVLTree<OrderExecuted> OrderExecutedTree;
-//     static bool isRead;
-
-// private:
-//     Tree();
-//     Tree(Tree&);
-// };
 //#include "AVLTree.inl"
 #endif

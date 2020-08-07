@@ -1,6 +1,7 @@
 #include "../../AbstractImp/inc/AbstractImp.hpp"
 #include "../../TWAP/inc/TWAP.hpp"
 #include "../../VWAP/inc/VWAP.hpp"
+#include "../../FileManager/inc/FileManager.hpp"
 
 class AlgoHandler:public AbstractImp{
 public:
@@ -15,18 +16,5 @@ private:
     AVLTree<OrderExecuted>OrderExecutedTree;
 
     bool isRead;
-
-    void fileRead(const char * file );
-    inline string readLine(ifstream& inFile);
-
-    void findValues(const string & line);
-    int findColumn(istringstream& inString,int flag,int collumn);
-
-    void fileAddOrder(istringstream &inString,int flag);
-    void fileOrderExecute(istringstream &inString,int flag);
-    void fileOrderDelete(istringstream &inString,int flag);
-
-    template<class T>
-    inline void addMessage(AVLTree<T>& tree,const T& message);
 
 };
