@@ -12,8 +12,6 @@ public:
 
 private:
 
-    //virtual double compute(const char* file)override;
-
     void calculateTotalPrice(AVLTree<AddOrder>::Node* node)const;
 
     static uint32_t totalPrice;

@@ -3,11 +3,7 @@
 
 #include "../inc/AVLTree.hpp"
 
-// AVLTree<AddOrder> AddOrderTree;
-// AVLTree<OrderDelete> OrderDeleteTree;
-// AVLTree<OrderExecuted> OrderExecutedTree;
-
-
+using std:: max;
 
 /* 
 ###################################
@@ -649,19 +645,6 @@ AVLTree<AddOrder>::Node * AVLTree<AddOrder>::leftRotate(Node *node)
     return y; 
 } 
 
-/* void AVLTree<AddOrder>:: fileRead(const char * file ){
-
-    ifstream inFile(file);
-    while(!inFile.eof()){
-        // clock_t start=clock();
-        string line=readLine(inFile);
-        findValues(line);
-    
-        // if(line == ";")//tekrar bak
-        //         break; 
-    }
-
-} */
 
 int AVLTree<AddOrder>:: getBalance(Node* node){
     if (node == NULL) 

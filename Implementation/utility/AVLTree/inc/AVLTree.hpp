@@ -2,13 +2,16 @@
 #define _AVLTREE_HPP_
 //#pragma once
 
-#include<iostream>
-#include<fstream>
-#include<sstream>
-
+#include "../../inc/std.hpp"
 #include "AVLTreePod.hpp"
 
-using namespace std;
+
+using std::string;
+using std::ofstream;
+using std::cout;
+using std::cerr;
+using std::endl;
+
 
 template<class T>
 class AVLTree;
@@ -66,7 +69,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,data.timestamp);
+        root = removeNode(root,data.timestamp);
         
         return true;
     }
@@ -77,7 +80,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,timestamp);
+        root = removeNode(root,timestamp);
         
         return true;
     }
@@ -216,7 +219,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,data.orderId);
+        root = removeNode(root,data.orderId);
         
         return true;
     }
@@ -227,7 +230,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,orderId);
+        root = removeNode(root,orderId);
         
         return true;
     }
@@ -365,7 +368,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,data.orderId);
+        root = removeNode(root,data.orderId);
         
         return true;
     }
@@ -376,7 +379,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,orderId);
+        root = removeNode(root,orderId);
         
         return true;
     }
@@ -513,7 +516,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,data.orderId);
+        root = removeNode(root,data.orderId);
         
         return true;
     }
@@ -524,7 +527,7 @@ public:
             return false;//If not found, it cannot be deleted
         }
 
-        root = removeNode(query,orderId);
+        root = removeNode(root,orderId);
         
         return true;
     }
@@ -608,5 +611,4 @@ private:
     void  writePostorder(Node * node,ofstream & outFile)const;
 };
 
-//#include "AVLTree.inl"
 #endif

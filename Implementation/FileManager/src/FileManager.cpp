@@ -1,15 +1,19 @@
+#include "../../utility/AVLTree/inc/AVLTree.hpp"
 #include "../inc/FileManager.hpp"
 
+using std::istringstream;
+using std::ifstream;
+
 template<class T>
-inline void FileManager::addMessage(AVLTree<T>& tree,const T& message){
-    tree.insert(message);
+inline void FileManager::addMessage(AVLTree<T>* tree,const T& message){
+    tree->insert(message);
 }
 
 void  FileManager::fileRead(const char * file,
-                            AVLTree<Seconds>&STree,
-                            AVLTree<AddOrder>&AOTree,
-                            AVLTree<OrderExecuted>&OETree,
-                            AVLTree<OrderDelete>&ODTree)
+                            AVLTree<Seconds>*STree,
+                            AVLTree<AddOrder>*AOTree,
+                            AVLTree<OrderExecuted>*OETree,
+                            AVLTree<OrderDelete>*ODTree)
 {
 
     ifstream inFile(file);
@@ -33,10 +37,10 @@ inline string FileManager::readLine(ifstream& inFile){
 
 
 void FileManager::findValues(const string & line,
-                        AVLTree<Seconds>&STree,
-                        AVLTree<AddOrder>&AOTree,
-                        AVLTree<OrderExecuted>&OETree,
-                        AVLTree<OrderDelete>&ODTree)
+                        AVLTree<Seconds>*STree,
+                        AVLTree<AddOrder>*AOTree,
+                        AVLTree<OrderExecuted>*OETree,
+                        AVLTree<OrderDelete>*ODTree)
 {
     istringstream inString(line);
 

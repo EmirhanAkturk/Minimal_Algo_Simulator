@@ -2,6 +2,11 @@
 #define _TWAP_HPP_
 
 #include "../../utility/AVLTree/inc/AVLTree.hpp"
+// template <class T>
+// class AVLTree;
+
+// struct AddOrder;
+
 
 class TWAP{
 public:

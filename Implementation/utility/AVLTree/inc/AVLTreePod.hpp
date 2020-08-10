@@ -5,11 +5,6 @@ enum MessageType{
     ORDER_DELETE_TYPE='D'
 };
 
-enum choice{
-    TWAP_CALCULATE='T',
-    VWAP_CALCULATE='V'
-};
-
 enum PRINT{
     INORDER=1,
     PREORDER=2,

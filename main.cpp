@@ -1,6 +1,11 @@
 #include "Implementation/AlgoHandler/inc/AlgoHandler.hpp"
+#include "Implementation/utility/inc/std.hpp"
+
 
 int main(){
+    using std::cout;
+    using std::endl;
+    
     AbstractImp * imp = new AlgoHandler();
 
     //const char *file = "documentation/SecondsMessage.txt";

@@ -3,9 +3,6 @@
 uint32_t VWAP:: totalPrice=0;
 int VWAP:: messageCount =0;
 
-// AVLTree<AddOrder> Tree::AddOrderTree;
-// AVLTree<OrderDelete> Tree::OrderDeleteTree;
-// AVLTree<OrderExecuted> Tree::OrderExecutedTree;
 double VWAP:: calculate(AVLTree<AddOrder>::Node* node)const{
     calculateTotalPrice(node);
     

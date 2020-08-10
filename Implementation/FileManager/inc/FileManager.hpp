@@ -1,41 +1,37 @@
-#include "../../utility/AVLTree/inc/AVLTree.hpp"
+#include "../../utility/inc/std.hpp"
+
+template<class T>
+class AVLTree;
 
 class FileManager{
 public:
-    // /* FileManager(AVLTree<AddOrder>& AddOrderTree,
-    //             AVLTree<OrderExecuted>& OrderExecutedTree,
-    //             AVLTree<OrderDelete>& OrderDeleteTree)
-    //             :_AddOrderTree{&AddOrderTree},
-    //             _OrderExecutedTree{&OrderExecutedTree},
-    //             _OrderDeleteTree{&OrderDeleteTree}
-    // {/* deliberately left blank */} */
 
     FileManager()=delete;
     FileManager(FileManager&)=delete;
 
-    static void fileRead(const char * file, 
-                        AVLTree<Seconds>&STree,
-                        AVLTree<AddOrder>&AddOrderTree,
-                        AVLTree<OrderExecuted>&OrderExecutedTree,
-                        AVLTree<OrderDelete>&OrderDeleteTree);
+    static void fileRead(const char * file,
+                        AVLTree<Seconds>*STree,
+                        AVLTree<AddOrder>*AOTree,
+                        AVLTree<OrderExecuted>*OETree,
+                        AVLTree<OrderDelete>*ODTree);
 
 private:
 
-    static inline string readLine(ifstream& inFile);
+    static inline std::string readLine(std::ifstream& inFile);
 
-    static void findValues(const string & line,
-                        AVLTree<Seconds>&STree,
-                        AVLTree<AddOrder>&AOTree,
-                        AVLTree<OrderExecuted>&OETree,
-                        AVLTree<OrderDelete>&ODTree);
+    static void findValues(const std::string & line,
+                        AVLTree<Seconds>*STree,
+                        AVLTree<AddOrder>*AOTree,
+                        AVLTree<OrderExecuted>*OETree,
+                        AVLTree<OrderDelete>*ODTree);
 
-    static int findColumn(istringstream& inString,int flag,int collumn);
+    static int findColumn(std::istringstream& inString,int flag,int collumn);
 
-    static Seconds fileSeconds(istringstream &inString,int flag);
-    static AddOrder fileAddOrder(istringstream &inString,int flag);
-    static OrderExecuted fileOrderExecute(istringstream &inString,int flag);
-    static OrderDelete fileOrderDelete(istringstream &inString,int flag);
+    static Seconds fileSeconds(std::istringstream &inString,int flag);
+    static AddOrder fileAddOrder(std::istringstream &inString,int flag);
+    static OrderExecuted fileOrderExecute(std::istringstream &inString,int flag);
+    static OrderDelete fileOrderDelete(std::istringstream &inString,int flag);
 
     template<class T>
-    static inline void addMessage(AVLTree<T>& tree,const T& message);
+    static inline void addMessage(AVLTree<T>* tree,const T& message);
 };
