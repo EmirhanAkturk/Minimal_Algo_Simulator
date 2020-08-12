@@ -2,6 +2,7 @@
 #define _TWAP_HPP_
 
 #include "../../utility/AVLTree/inc/AVLTree.hpp"
+#include "../../utility/Graph/inc/Graph.hpp"
 // template <class T>
 // class AVLTree;
 
@@ -13,16 +14,21 @@ public:
     TWAP()
     { /* deliberately left blank. */  }
 
-    double calculate(AVLTree<AddOrder>::Node* node)const;              
+    double calculate(AVLTree<AddOrder>::Node* node);              
 
 private:
 
-    //virtual double compute(const char* file)override;
 
-    void calculateTotalPrice(AVLTree<AddOrder>::Node* node)const;
+    void calculateAveragePrice(Graph<uint32_t,Bar>* graph);
+    //void calculateTotalPrice(AVLTree<AddOrder>::Node* node);
+
+    void insertBar(AVLTree<AddOrder>::Node* node,Graph<uint32_t,Bar>* graph);
     
-    static uint32_t totalPrice;
-    static int messageCount;
+    //static uint32_t totalPrice;
+    static uint32_t totalAverageBarPrice;
+
+    //static int messageCount;
+    static int barCount;
 
 };
 

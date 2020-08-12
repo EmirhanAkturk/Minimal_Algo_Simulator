@@ -18,7 +18,10 @@ TWAP.o: Implementation/TWAP/src/TWAP.cpp \
  Implementation/TWAP/src/../inc/TWAP.hpp \
  Implementation/TWAP/src/../inc/../../utility/AVLTree/inc/AVLTree.hpp \
  Implementation/TWAP/src/../inc/../../utility/AVLTree/inc/../../inc/std.hpp \
- Implementation/TWAP/src/../inc/../../utility/AVLTree/inc/AVLTreePod.hpp
+ Implementation/TWAP/src/../inc/../../utility/AVLTree/inc/AVLTreePod.hpp \
+ Implementation/TWAP/src/../inc/../../utility/Graph/inc/Graph.hpp \
+ Implementation/TWAP/src/../inc/../../utility/Graph/inc/../../inc/std.hpp \
+ Implementation/TWAP/src/../inc/../../utility/Graph/inc/GraphPod.hpp
 	$(COMPILER) Implementation/TWAP/src/TWAP.cpp -c
 VWAP.o: Implementation/VWAP/src/VWAP.cpp \
  Implementation/VWAP/src/../inc/VWAP.hpp \
@@ -53,5 +56,6 @@ AlgoHandler.o: Implementation/AlgoHandler/src/AlgoHandler.cpp \
 	$(COMPILER) Implementation/AlgoHandler/src/AlgoHandler.cpp -c
 Graph.o: Implementation/utility/Graph/src/Graph.cpp \
  Implementation/utility/Graph/src/../inc/Graph.hpp \
- Implementation/utility/Graph/src/../inc/../../inc/std.hpp
+ Implementation/utility/Graph/src/../inc/../../inc/std.hpp \
+ Implementation/utility/Graph/src/../inc/GraphPod.hpp
 	$(COMPILER) Implementation/utility/Graph/src/Graph.cpp -c

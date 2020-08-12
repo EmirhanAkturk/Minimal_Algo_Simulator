@@ -17,11 +17,11 @@ int main(){
 
     cout<<"TWAP result:"<<result<<endl;
 
-    cout<<"VWAP calculating...\n";
+    // cout<<"VWAP calculating...\n";
 
-    result=imp->compute(file,VWAP_CALCULATE);
+    // result=imp->compute(file,VWAP_CALCULATE);
 
-    cout<<"VWAP result:"<<result<<endl;
+    // cout<<"VWAP result:"<<result<<endl;
 
     return 0;
 }

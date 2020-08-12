@@ -16,7 +16,7 @@ void VWAP:: calculateTotalPrice(AVLTree<AddOrder>::Node* node)const{
     totalPrice += node->orderPrice;
     ++messageCount;
 
-    calculate(node->left);
+    calculateTotalPrice(node->left);
     
-    calculate(node->right);
+    calculateTotalPrice(node->right);
 }

@@ -27,6 +27,7 @@ void Graph<uint32_t,Bar>::addEdge(uint32_t key, const Bar& value)
 }
 
 
+//void Graph<uint32_t,Bar>::addEdge(uint32_t timestamp, Graph<uint32_t,Bar> nanoseconds) 
 void Graph<uint32_t,Bar>::addEdge(uint32_t key, uint32_t newPrice) 
 {    
     typename std::unordered_map<uint32_t, Bar>::iterator itr= map->find(key);
@@ -63,4 +64,14 @@ void Graph<uint32_t,Bar>::print(){
         std::cout<<i.first<<": {"<<i.second.open<<","<<i.second.high<<","
             <<i.second.low<<","<<i.second.close<<"}"<<std::endl; 
     } 
+}
+
+void Graph<uint32_t,Bar> ::writeFile(std::ofstream &outFile){
+    
+    for (auto& i: *map) 
+    { 
+        outFile<<i.first<<": {"<<i.second.open<<","<<i.second.high<<","
+            <<i.second.low<<","<<i.second.close<<"}"<<std::endl; 
+    }     
+
 }

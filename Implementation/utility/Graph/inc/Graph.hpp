@@ -2,20 +2,7 @@
 #define _GRAPH_HPP_
 
 #include "../../inc/std.hpp"
-
-struct Bar{
-    Bar(uint32_t newPrice):open{newPrice},
-    high{newPrice},low{newPrice},close{newPrice}
-    {}
-    
-    Bar(uint32_t o,uint32_t h,uint32_t l,uint32_t c):
-    open{o},high{h},low{l},close{c}
-    {}
-    uint32_t open;
-    uint32_t high;
-    uint32_t low;
-    uint32_t close;
-};
+#include "GraphPod.hpp"
 
 // Class to represent a graph 
 template<class K, class V>
@@ -34,6 +21,16 @@ public:
     void removeEdge(uint32_t vertex);
 
     void print();
+
+    void writeFile(std::ofstream &outFile);
+
+    inline std::unordered_map<uint32_t,Bar>::iterator getMapBegin(){
+        return map->begin();
+    }
+
+    inline std::unordered_map<uint32_t,Bar>::iterator getMapEnd(){
+        return map->end();
+    }
 
 private:
     std::unordered_map<uint32_t,Bar>*map;
