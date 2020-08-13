@@ -48,20 +48,31 @@ void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Bar>>* graph){
             }
 
             bar->close=nanoItr->second.close;
+            bar->quantity=nanoItr->second.quantity;
             
         }
         // cout<<keyItr->first<<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high<<
         //     std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close<<"\n";
     
         outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
-                <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close;
+                <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close
+                <<std::setw(weight)<<bar->quantity;
         
         double typicalPrice= static_cast<double>(bar->high+bar->low+bar->close)/3/1000;
 
         outFile<<std::setw(weight+5)<<typicalPrice;
 
+        uint32_t VP=bar->quantity *typicalPrice;
+        outFile<<std::setw(weight)<<VP;
+        
+        totalVP+=VP;
+        outFile<<std::setw(weight)<<totalVP;
+        
+        totalVolume+=bar->quantity;
+        outFile<<std::setw(weight)<<totalVolume;
 
-        // outFile<<std::setw(weight+5)<<Twap<<endl;
+        double Vwap=static_cast<double>(totalVP)/static_cast<double>(totalVolume);
+        outFile<<std::setw(weight+5)<<Vwap<<endl;
         
         if(bar!=nullptr){
             delete bar;
