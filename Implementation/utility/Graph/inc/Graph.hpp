@@ -22,6 +22,8 @@ class Graph<uint32_t, Bar> {
 public: 
 	Graph();// Constructor 
 
+    ~Graph();// Destructor
+
 	// function to add an edge to graph 
 	void addEdge(uint32_t nanosecond,const Bar& value); 
 	
@@ -29,7 +31,7 @@ public:
 
     void removeEdge(uint32_t vertex);
 
-    inline std::unordered_map<uint32_t,Bar>::iterator search(uint32_t vertex){
+    inline std::map<uint32_t,Bar>::iterator search(uint32_t vertex){
         return map->find(vertex);
     }
 
@@ -37,16 +39,16 @@ public:
 
     void writeFile(std::ofstream &outFile);
 
-    inline std::unordered_map<uint32_t,Bar>::iterator getMapBegin(){
+    inline std::map<uint32_t,Bar>::iterator getMapBegin(){
         return map->begin();
     }
 
-    inline std::unordered_map<uint32_t,Bar>::iterator getMapEnd(){
+    inline std::map<uint32_t,Bar>::iterator getMapEnd(){
         return map->end();
     }
 
 private:
-    std::unordered_map<uint32_t,Bar>*map;
+    std::map<uint32_t,Bar>*map;
 };
 
 
@@ -66,6 +68,8 @@ class Graph<uint32_t, Graph<uint32_t, Bar>> {
 public: 
 	Graph();// Constructor 
 
+	~Graph();// Destructor
+
 	// function to add an edge to graph 
 	//void addEdge(uint32_t vertex,const Value& value); 
 	
@@ -73,23 +77,23 @@ public:
 
     void removeEdge(uint32_t timestamp);
 
-    inline std::unordered_map<uint32_t,Graph<uint32_t, Bar>>::iterator search(uint32_t timestamp){
+    inline std::map<uint32_t,Graph<uint32_t, Bar>>::iterator search(uint32_t timestamp){
         return map->find(timestamp);
     }
     void print();
 
     void writeFile(std::ofstream &outFile);
 
-    inline std::unordered_map<uint32_t, Graph<uint32_t, Bar>>::iterator getMapBegin(){
+    inline std::map<uint32_t, Graph<uint32_t, Bar>>::iterator getMapBegin(){
         return map->begin();
     }
 
-    inline std::unordered_map<uint32_t, Graph<uint32_t, Bar>>::iterator getMapEnd(){
+    inline std::map<uint32_t, Graph<uint32_t, Bar>>::iterator getMapEnd(){
         return map->end();
     }
 
 private:
-    std::unordered_map<uint32_t,Graph<uint32_t, Bar>>*map;
+    std::map<uint32_t,Graph<uint32_t, Bar>>*map;
 };
 
 

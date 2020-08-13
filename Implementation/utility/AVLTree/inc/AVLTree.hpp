@@ -52,7 +52,7 @@ public:
     
     ~AVLTree(){
         //cout<<"Seconds destructor\n";
-        root=makeEmpty(root);
+        //root=makeEmpty(root);
     }
 
     Node* getRoot()const{
@@ -203,7 +203,7 @@ public:
     
     ~AVLTree(){
         //cout<<"AddOrder destructor\n";
-        root=makeEmpty(root);
+        //root=makeEmpty(root);
     }
 
     Node* getRoot()const{
@@ -353,7 +353,7 @@ public:
     
     ~AVLTree(){
         //cout<<"OrderExecuted destructor\n";
-        root=makeEmpty(root);
+        //root=makeEmpty(root);
     }
 
     Node* getRoot()const{
@@ -501,7 +501,7 @@ public:
     
     ~AVLTree(){
         //cout<<"OrderDelete destructor\n";
-        root=makeEmpty(root);
+        //root=makeEmpty(root);
     }
 
     Node* getRoot()const{

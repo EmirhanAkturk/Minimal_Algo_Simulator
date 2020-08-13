@@ -10,7 +10,7 @@ AOTree{new AVLTree<AddOrder>},OETree{new AVLTree<OrderExecuted>},
 ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Bar> >}
 { /* deliberately left blank. */  }
 
-double AlgoHandler::compute(const char* file,char calculateChoice){
+void AlgoHandler::compute(const char* file,char calculateChoice){
     if(isRead==false){
         
         clock_t tStart = clock();
@@ -22,7 +22,7 @@ double AlgoHandler::compute(const char* file,char calculateChoice){
 
         tStart = clock();
 
-        functionSeconds();
+        fillTimestampGraph();
         // AOTree->writeFile(outFileA,INORDER);
         
         runtime=clock() - tStart;
@@ -40,23 +40,21 @@ double AlgoHandler::compute(const char* file,char calculateChoice){
 
     if(calculateChoice == TWAP_CALCULATE){
         TWAP twap;
-        double result = twap.calculate(AOTree->getRoot());
-        return result;
+        twap.calculate(graph);
+        
     }
 
     else if(calculateChoice == VWAP_CALCULATE){
         VWAP vwap;
-        double result = vwap.calculate(AOTree->getRoot());
-        return result;
+        vwap.calculate(AOTree->getRoot());
     }
 
     cerr<<"Invalid calculate choice!!\n";
-    return -1;
 
 }
 
 
-void AlgoHandler::functionSeconds(){
+void AlgoHandler::fillTimestampGraph(){
     AVLTree<Seconds>::Node * Sroot=STree->getRoot();
     
     if (Sroot == NULL) 
@@ -80,7 +78,7 @@ void AlgoHandler::functionSeconds(){
         AVLTree<Seconds>::Node *node = Sstack.top(); 
 
         //cout<<node->timestamp<<endl;
-        functionAddOrder(node->timestamp,outFile);
+        fillNanosecondGraph(node->timestamp);
 
         Sstack.pop(); 
   
@@ -94,7 +92,7 @@ void AlgoHandler::functionSeconds(){
 
 
 
-void AlgoHandler::functionAddOrder(uint32_t timestamp,ofstream& outFile){
+void AlgoHandler::fillNanosecondGraph(uint32_t timestamp){
     AVLTree<AddOrder>::Node * AOroot=AOTree->getRoot();
     
     if (AOroot == NULL) 

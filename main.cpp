@@ -14,9 +14,9 @@ int main(){
 
     cout<<"Twap calculating...\n";
 
-    double result=imp->compute(file,TWAP_CALCULATE);
+    imp->compute(file,TWAP_CALCULATE);
 
-    cout<<"TWAP result:"<<result<<endl;
+    cout<<"calculation result was written to the TWAP.txt file..\n";
 
     // cout<<"VWAP calculating...\n";
 

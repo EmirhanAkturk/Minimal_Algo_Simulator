@@ -11,12 +11,3 @@ struct Bar{
     uint32_t low;
     uint32_t close;
 };
-
-struct Value{
-
-    Value(uint32_t newNanosecond,uint32_t newOrderPrice):
-    nanosecond{newNanosecond},bar{newOrderPrice}
-    {}
-    uint32_t nanosecond;
-    Bar bar;
-};

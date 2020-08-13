@@ -26,7 +26,7 @@ class AlgoHandler:public AbstractImp{
 public:
     AlgoHandler();
 
-    virtual double compute(const char* file,char calculateChoice)override;
+    virtual void compute(const char* file,char calculateChoice)override;
     
 private:
     AVLTree<Seconds>*STree;
@@ -38,8 +38,8 @@ private:
 
     bool isRead;
 
-    void functionSeconds();
-    void functionAddOrder(uint32_t timestamp,std::ofstream& outFile);
+    void fillTimestampGraph();
+    void fillNanosecondGraph(uint32_t timestamp);
 };
 
 #endif

@@ -14,20 +14,12 @@ public:
     TWAP()
     { /* deliberately left blank. */  }
 
-    double calculate(AVLTree<AddOrder>::Node* node);              
+    //double calculate(AVLTree<AddOrder>::Node* node);
+    void calculate(Graph<uint32_t,Graph<uint32_t,Bar>>* graph);
 
 private:
 
-
-    void calculateAveragePrice(Graph<uint32_t,Bar>* graph);
-    void calculateTotalPrice(AVLTree<AddOrder>::Node* node);
-
-    void insertBar(AVLTree<AddOrder>::Node* node,Graph<uint32_t,Bar>* graph);
-    
-    static uint32_t totalPrice;
-    static int messageCount;
-
-    static uint32_t totalAverageBarPrice;
+    static double totalTypicalPrice;
     static int barCount;
 
 };

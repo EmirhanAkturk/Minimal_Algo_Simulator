@@ -8,13 +8,22 @@
 ##############################################
 */
 
-Graph<uint32_t,Bar>:: Graph():map{new std::unordered_map<uint32_t,Bar>} // Constructor 
+Graph<uint32_t,Bar>:: Graph():map{new std::map<uint32_t,Bar>} // Constructor 
 {/* deliberately left blank */} 
+
+Graph<uint32_t,Bar>:: ~Graph()// Destructor 
+{
+    if(map!=nullptr)
+        map=nullptr;
+        //std::cout<<"nanosecond destructor\n";
+        //delete map;
+    
+} 
 
 
 void Graph<uint32_t,Bar>::addEdge(uint32_t key, const Bar& value) 
 {    
-    typename std::unordered_map<uint32_t, Bar>::iterator itr= map->find(key);
+    typename std::map<uint32_t, Bar>::iterator itr= map->find(key);
     
     if(itr!=map->end()){//if found, update value
         
@@ -38,7 +47,7 @@ void Graph<uint32_t,Bar>::addEdge(uint32_t key, const Bar& value)
 //void Graph<uint32_t,Bar>::addEdge(uint32_t timestamp, Graph<uint32_t,Bar> nanoseconds) 
 void Graph<uint32_t,Bar>::addEdge(uint32_t key, uint32_t newPrice) 
 {    
-    typename std::unordered_map<uint32_t, Bar>::iterator itr= map->find(key);
+    typename std::map<uint32_t, Bar>::iterator itr= map->find(key);
     
     if(itr!=map->end()){//if found, update value
         
@@ -97,13 +106,22 @@ void Graph<uint32_t,Bar> ::writeFile(std::ofstream &outFile){
 */
 
 Graph<uint32_t,Graph<uint32_t, Bar>>:: Graph():
-map{new std::unordered_map<uint32_t,Graph<uint32_t, Bar>>} // Constructor 
+map{new std::map<uint32_t,Graph<uint32_t, Bar>>} // Constructor 
 {/* deliberately left blank */} 
+
+Graph<uint32_t,Graph<uint32_t, Bar>>:: ~Graph()// Destructor 
+{   
+     if(map!=nullptr)
+        map=nullptr;
+        //std::cout<<"timestamp destructor\n";
+        //delete map;
+    
+} 
 
 //void Graph<uint32_t,Bar>::addEdge(uint32_t timestamp, Graph<uint32_t,Bar> nanoseconds) 
 void Graph<uint32_t,Graph<uint32_t, Bar>>::addEdge(uint32_t key, uint32_t newNanosecond,uint32_t newPrice) 
 {    
-    typename std::unordered_map<uint32_t, Graph<uint32_t, Bar>>::iterator keyItr= map->find(key);
+    typename std::map<uint32_t, Graph<uint32_t, Bar>>::iterator keyItr= map->find(key);
     
     if(keyItr!=map->end()){//if timestamp found, update value
         keyItr->second.addEdge(newNanosecond,newPrice);

@@ -1,78 +1,77 @@
 #include "../inc/TWAP.hpp"
 //#include "../../utility/AVLTree/inc/AVLTree.hpp"
 
-uint32_t TWAP:: totalPrice=0;
-int TWAP:: messageCount =0;
+// uint32_t TWAP:: totalPrice=0;
+// int TWAP:: messageCount =0;
 
-uint32_t TWAP:: totalAverageBarPrice=0;
+double TWAP:: totalTypicalPrice=0;
 int TWAP:: barCount =0;
 
 
-double TWAP:: calculate(AVLTree<AddOrder>::Node* node){
-    Graph<uint32_t,Bar>* graph= new Graph<uint32_t,Bar>;
-    //insertBar(node,map);
+void TWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Bar>>* graph){
 
-    clock_t tStart = clock();
+    ofstream outFile("outputFiles/TWAP.txt");
 
-    insertBar(node,graph);
+    int weight=12;
+
+    outFile<<std::setw(weight/2)<<"Time"<<std::setw(weight+2)<<"Open"<<std::setw(weight)
+            <<"High"<<std::setw(weight)<<"Low"<<std::setw(weight)<< "Close"
+            <<std::setw(weight+5)<< "Typical Price"<<std::setw(weight+5)<<"TWAP\n";
     
-    clock_t runtime=clock() - tStart;
-    std::cout<<"insertBar Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+    std::map<uint32_t,Graph<uint32_t,Bar>>::iterator keyItr;
+    for(keyItr=graph->getMapBegin(); keyItr!=graph->getMapEnd(); ++keyItr){
+        uint32_t timestamp=keyItr->first;
+        int second=timestamp%60;
+        timestamp/=60;
+        int minute=timestamp%60;
+        timestamp/=60;
+        int hour=timestamp%24;
+        
+        outFile<<std::setw(2)<<hour<<":"<<std::setw(2)<<minute<<":"<<std::setw(2)<<second<<std::setw(weight-8);
 
-    ofstream outFile("outputFiles/Bar.txt");
+        std::map<uint32_t,Bar>::iterator nanoItr;
+        
+        nanoItr=keyItr->second.getMapBegin();
+        
+        bool isFirst=true;
+        Bar *bar;
+        for(;nanoItr!=keyItr->second.getMapEnd();++nanoItr){
+            if(isFirst){
+                uint32_t open=nanoItr->second.open;
+                bar=new Bar(open);
+                isFirst=false;
+            }
 
-    tStart = clock();
+            if(nanoItr->second.high > bar->high){
+                bar->high=nanoItr->second.high;
+            }
+            else if(nanoItr->second.low < bar->low){
+                bar->low=nanoItr->second.low;
+            }
 
-    graph->writeFile(outFile);
+            bar->close=nanoItr->second.close;
+            
+        }
+        // cout<<keyItr->first<<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high<<
+        //     std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close<<"\n";
     
-    runtime=clock() - tStart;
-    std::cout<<"writeFile Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
- 
-    //map.print();
-    
-    calculateAveragePrice(graph);
-    //calculateTotalPrice(node);
+        outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
+                <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close;
+        
+        double typicalPrice= static_cast<double>(bar->open+bar->high+bar->low+bar->close)/4/1000;
 
-    //return (static_cast<double>(totalPrice)/static_cast<double>(messageCount));
-    return (static_cast<double>(totalAverageBarPrice)/static_cast<double>(barCount));
-}
+        outFile<<std::setw(weight+5)<<typicalPrice;
 
-void TWAP:: calculateAveragePrice(Graph<uint32_t,Bar> *graph){
-    std::unordered_map<uint32_t,Bar>::iterator itr;
-    double totalBarPrice;
-    double averageBarPrice;
-
-    for (itr = graph->getMapBegin(); itr!= graph->getMapEnd(); ++itr) 
-    {   
-        totalBarPrice =  itr->second.open+itr->second.high+
-                         itr->second.low+itr->second.close;
-
-        averageBarPrice = static_cast<double>(totalBarPrice)/4;
-
-        totalAverageBarPrice+=averageBarPrice;
+        totalTypicalPrice+=typicalPrice;
         ++barCount;
+        
+        double Twap=static_cast<double> (totalTypicalPrice)/static_cast<double> (barCount)/1000;
 
-    }     
-}
-
-void TWAP:: calculateTotalPrice(AVLTree<AddOrder>::Node* node){
-    if(node == nullptr)
-        return;
-    
-    totalPrice += node->orderPrice;
-    ++messageCount;
-
-    calculateTotalPrice(node->left);
-    
-    calculateTotalPrice(node->right);
-}
-
-void TWAP::insertBar(AVLTree<AddOrder>::Node* node,Graph<uint32_t,Bar>* graph){
-    if(node == nullptr)
-        return;
-
-    insertBar(node->left, graph);
-    insertBar(node->right, graph);
-
-    graph->addEdge(node->nanosecond,node->orderPrice);
+        outFile<<std::setw(weight+5)<<Twap<<endl;
+        
+        if(bar!=nullptr){
+            delete bar;
+            bar=nullptr;
+        }
+    }
 }

@@ -3,7 +3,7 @@
 
 class AbstractImp{
 public:
-    virtual double compute(const char* file,char calculateChoice)=0;
+    virtual void compute(const char* file,char calculateChoice)=0;
 };
 
 #endif
