@@ -396,6 +396,7 @@ AVLTree<AddOrder>::Node * AVLTree<AddOrder>::insertNode(Node * node, const AddOr
     //if already exist ,check if the price is different
     if(query!=nullptr){
         if(query->orderPrice != newData.orderPrice){
+            query->timestamp=newData.timestamp;//update timestamp value
             query->orderPrice=newData.orderPrice;//update price value
             query->nanosecond=newData.nanosecond;//update nanosecond value
         }
@@ -483,6 +484,7 @@ AVLTree<AddOrder>::Node* AVLTree<AddOrder>::removeNode(Node* node,uint64_t order
             Node * temp = findMin(node->right);
 
             // Copy the inorder successor's data to this Node
+            node->timestamp=temp->timestamp;
             node->nanosecond=temp->nanosecond;
             node->orderId=temp->orderId;
             node->orderPrice=temp->orderPrice;
@@ -701,11 +703,40 @@ void  AVLTree<AddOrder>::writeInorder(Node * node,ofstream & outFile)const{
     writeInorder(node->left,outFile);
 
     // then deal with the Node 
-    outFile << node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
+    outFile << node->timestamp<<";"<<node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
     // now recur on right subtree 
     writeInorder(node->right,outFile);
 }
 
+
+void  AVLTree<AddOrder>::writeItrPreorder(Node * root,ofstream & outFile)const{
+    
+    if (root == NULL) 
+       return; 
+  
+    // Create an empty stack and push root to it 
+    std::stack<Node *> nodeStack; 
+    nodeStack.push(root); 
+  
+    /* Pop all items one by one. Do following for every popped item 
+       a) print it 
+       b) push its right child 
+       c) push its left child 
+    Note that right child is pushed first so that left is processed first */
+    while (nodeStack.empty() == false) 
+    { 
+        // Pop the top item from stack and print it 
+        Node *node = nodeStack.top(); 
+        outFile << node->timestamp<<";"<<node->nanosecond<<";"<<node->orderId<<";"<<node->orderPrice<<endl;
+        nodeStack.pop(); 
+  
+        // Push right and left children of the popped node to stack 
+        if (node->right) 
+            nodeStack.push(node->right); 
+        if (node->left) 
+            nodeStack.push(node->left); 
+    } 
+}
 
 void  AVLTree<AddOrder>::writePreorder(Node * node,ofstream & outFile)const{
     if(node == nullptr)

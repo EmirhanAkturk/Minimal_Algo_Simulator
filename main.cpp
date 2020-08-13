@@ -10,6 +10,7 @@ int main(){
 
     //const char *file = "documentation/SecondsMessage.txt";
     const char *file = "documentation/AddOrderMessage.txt";
+    //const char *file = "documentation/NewSecAdd.txt";
 
     cout<<"Twap calculating...\n";
 

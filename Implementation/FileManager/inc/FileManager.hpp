@@ -1,3 +1,6 @@
+#ifndef _FILE_MANAGER_
+#define _FILE_MANAGER_
+
 #include "../../utility/inc/std.hpp"
 
 template<class T>
@@ -34,4 +37,7 @@ private:
 
     template<class T>
     static inline void addMessage(AVLTree<T>* tree,const T& message);
+    static uint32_t curTimestamp;//current timestamp
 };
+
+#endif

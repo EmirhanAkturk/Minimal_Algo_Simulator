@@ -4,6 +4,8 @@
 using std::istringstream;
 using std::ifstream;
 
+uint32_t FileManager::curTimestamp=0;
+
 template<class T>
 inline void FileManager::addMessage(AVLTree<T>* tree,const T& message){
     tree->insert(message);
@@ -31,7 +33,6 @@ void  FileManager::fileRead(const char * file,
 inline string FileManager::readLine(ifstream& inFile){
     string line;
     inFile>>line;
-    //cout<<line<<endl;
     return line;
 }
 
@@ -54,10 +55,10 @@ void FileManager::findValues(const string & line,
 
     char c;
     inString>>c;
-
     switch(c){
         case SECONDS:{
             Seconds messageT = fileSeconds(inString,flag);
+            curTimestamp=messageT.timestamp;
             addMessage(STree,messageT);
             break;
             }
@@ -117,6 +118,8 @@ AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
     
     AddOrder messageA;
     
+    messageA.timestamp=curTimestamp;
+
     flag=findColumn(inString,flag,3);
     if(flag!=3){
         cerr<<"Incorrect column value!!\n";

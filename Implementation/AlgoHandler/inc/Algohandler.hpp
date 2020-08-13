@@ -1,4 +1,8 @@
+#ifndef _ALGO_HANDER_HPP_
+#define _ALGO_HANDER_HPP_
+
 #include "../../AbstractImp/inc/AbstractImp.hpp"
+#include "../../utility/inc/std.hpp"
 
 enum choice{
     TWAP_CALCULATE='T',
@@ -8,6 +12,11 @@ enum choice{
 template<class T>
 class AVLTree;
 
+template<class K,class V>
+class Graph;
+
+struct Value;
+struct Bar;
 struct Seconds;
 struct AddOrder;
 struct OrderDelete;
@@ -25,6 +34,12 @@ private:
     AVLTree<OrderDelete>*ODTree;
     AVLTree<OrderExecuted>*OETree;
 
+    Graph<uint32_t, Value> *graph;
+
     bool isRead;
 
+    void functionSeconds();
+    void functionAddOrder(uint32_t timestamp,std::ofstream& outFile);
 };
+
+#endif

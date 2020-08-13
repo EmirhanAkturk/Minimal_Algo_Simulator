@@ -7,5 +7,6 @@
 #include<string>
 #include<ctime>
 #include <unordered_map>
+#include <stack>
 
 #endif

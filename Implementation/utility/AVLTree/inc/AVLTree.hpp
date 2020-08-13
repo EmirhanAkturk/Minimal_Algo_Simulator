@@ -178,16 +178,17 @@ public:
 class Node{
 public:
     Node(const AddOrder& newData ):
-    nanosecond{newData.nanosecond},orderId{newData.orderId},
+    timestamp{newData.timestamp},nanosecond{newData.nanosecond},orderId{newData.orderId},
     orderPrice{newData.orderPrice},right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
     
-    Node(uint32_t newNanosecond,uint64_t newOrderId,uint32_t newOrderPrice):
-    nanosecond{newNanosecond},orderId{newOrderId},
+    Node(uint32_t newTimestampt,uint32_t newNanosecond,uint64_t newOrderId,uint32_t newOrderPrice):
+    timestamp{newTimestampt},nanosecond{newNanosecond},orderId{newOrderId},
     orderPrice{newOrderPrice},right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
     
     int height;
+    uint32_t timestamp;
     uint32_t nanosecond;
     uint32_t orderPrice;
     uint64_t orderId;
@@ -311,6 +312,7 @@ private:
     
     void  writeInorder(Node * node,ofstream & outFile)const;
     void  writePreorder(Node * node,ofstream & outFile)const;
+    void  writeItrPreorder(Node * node,ofstream & outFile)const;
     void  writePostorder(Node * node,ofstream & outFile)const;
 };
 
