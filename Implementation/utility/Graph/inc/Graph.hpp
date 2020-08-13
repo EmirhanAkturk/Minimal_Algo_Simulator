@@ -27,7 +27,7 @@ public:
 	// function to add an edge to graph 
 	void addEdge(uint32_t nanosecond,const Bar& value); 
 	
-    void addEdge(uint32_t vertex,uint32_t newPrice);
+    void addEdge(uint32_t vertex,uint32_t newPrice,uint32_t newQuantity);
 
     void removeEdge(uint32_t vertex);
 
@@ -73,7 +73,7 @@ public:
 	// function to add an edge to graph 
 	//void addEdge(uint32_t vertex,const Value& value); 
 	
-    void addEdge(uint32_t newTimestamp,uint32_t newNanosecond,uint32_t newPrice);
+    void addEdge(uint32_t newTimestamp,uint32_t newNanosecond,uint32_t newPrice,uint32_t newQuantity);
 
     void removeEdge(uint32_t timestamp);
 

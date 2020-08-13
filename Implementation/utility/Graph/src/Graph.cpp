@@ -45,7 +45,7 @@ void Graph<uint32_t,Bar>::addEdge(uint32_t key, const Bar& value)
 
 
 //void Graph<uint32_t,Bar>::addEdge(uint32_t timestamp, Graph<uint32_t,Bar> nanoseconds) 
-void Graph<uint32_t,Bar>::addEdge(uint32_t key, uint32_t newPrice) 
+void Graph<uint32_t,Bar>::addEdge(uint32_t key, uint32_t newPrice,uint32_t newQuantity ) 
 {    
     typename std::map<uint32_t, Bar>::iterator itr= map->find(key);
     
@@ -58,11 +58,12 @@ void Graph<uint32_t,Bar>::addEdge(uint32_t key, uint32_t newPrice)
             itr->second.low=newPrice;
 
         itr->second.close=newPrice;    
+        itr->second.quantity=newQuantity;    
         return;
     }
 
     else //else, insert value
-    {   Bar b{newPrice};
+    {   Bar b{newPrice,newQuantity};
         map->insert({key,b});
     }
 } 
@@ -79,7 +80,7 @@ void Graph<uint32_t,Bar>::print(){
     for (auto& i: *map) 
     { 
         std::cout<<i.first<<": {"<<i.second.open<<","<<i.second.high<<","
-            <<i.second.low<<","<<i.second.close<<"}"<<std::endl; 
+            <<i.second.low<<","<<i.second.close<<","<<i.second.quantity<<"}"<<std::endl;
     } 
 }
 
@@ -88,7 +89,7 @@ void Graph<uint32_t,Bar> ::writeFile(std::ofstream &outFile){
     for (auto& i: *map) 
     { 
         outFile<<i.first<<": {"<<i.second.open<<","<<i.second.high<<","
-            <<i.second.low<<","<<i.second.close<<"}"<<std::endl; 
+            <<i.second.low<<","<<i.second.close<<","<<i.second.quantity<<"}"<<std::endl; 
     }     
 
 }
@@ -119,12 +120,13 @@ Graph<uint32_t,Graph<uint32_t, Bar>>:: ~Graph()// Destructor
 } 
 
 //void Graph<uint32_t,Bar>::addEdge(uint32_t timestamp, Graph<uint32_t,Bar> nanoseconds) 
-void Graph<uint32_t,Graph<uint32_t, Bar>>::addEdge(uint32_t key, uint32_t newNanosecond,uint32_t newPrice) 
+void Graph<uint32_t,Graph<uint32_t, Bar>>::addEdge(uint32_t key, uint32_t newNanosecond,
+                                            uint32_t newPrice,uint32_t newQuantity ) 
 {    
     typename std::map<uint32_t, Graph<uint32_t, Bar>>::iterator keyItr= map->find(key);
     
     if(keyItr!=map->end()){//if timestamp found, update value
-        keyItr->second.addEdge(newNanosecond,newPrice);
+        keyItr->second.addEdge(newNanosecond,newPrice,newQuantity);
         
         return;
 
@@ -132,7 +134,7 @@ void Graph<uint32_t,Graph<uint32_t, Bar>>::addEdge(uint32_t key, uint32_t newNan
     
     else{//else, insert value
         Graph<uint32_t,Bar> nano;
-        nano.addEdge(newNanosecond,newPrice);
+        nano.addEdge(newNanosecond,newPrice,newQuantity);
         map->insert({key,nano});
     }
 

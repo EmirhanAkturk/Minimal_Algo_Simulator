@@ -26,14 +26,14 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         // AOTree->writeFile(outFileA,INORDER);
         
         runtime=clock() - tStart;
-        cout<<"function seconds time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+        cout<<"fill Timestamp Graph time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
         
         ofstream outFileA("outputFiles/timestamps.txt");
         
         graph->writeFile(outFileA);
 
-        ofstream outFileB("newSeconds.txt");
-        STree->writeFile(outFileB,INORDER);
+        ofstream outFileB("AddOrder.txt");
+        AOTree->writeFile(outFileB,INORDER);
 
         isRead=true;
     }
@@ -46,10 +46,11 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
 
     else if(calculateChoice == VWAP_CALCULATE){
         VWAP vwap;
-        vwap.calculate(AOTree->getRoot());
+        vwap.calculate(graph);
     }
 
-    cerr<<"Invalid calculate choice!!\n";
+    else
+        cerr<<"Invalid calculate choice!!\n";
 
 }
 
@@ -70,7 +71,6 @@ void AlgoHandler::fillTimestampGraph(){
        c) push its left child 
     Note that right child is pushed first so that left is processed first */
 
-    ofstream outFile("timestamp.txt");
 
     while (Sstack.empty() == false) 
     { 
@@ -114,7 +114,7 @@ void AlgoHandler::fillNanosecondGraph(uint32_t timestamp){
         AVLTree<AddOrder>::Node *node = AOstack.top(); 
         
         if(node->timestamp==timestamp){
-            graph->addEdge(timestamp,node->nanosecond,node->orderPrice);
+            graph->addEdge(timestamp,node->nanosecond,node->orderPrice,node->quantity);
         }
 
         AOstack.pop(); 

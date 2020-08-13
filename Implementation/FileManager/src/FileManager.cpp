@@ -134,6 +134,13 @@ AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
     }
     inString>>messageA.orderId;
 
+    flag=findColumn(inString,flag,8);
+    if(flag!=8){
+        cerr<<"Incorrect column value!!\n";
+        exit(1);
+    }
+    inString>>messageA.quantity;
+
     flag=findColumn(inString,flag,9);
     if(flag!=9){
         cerr<<"Incorrect column value!!\n";

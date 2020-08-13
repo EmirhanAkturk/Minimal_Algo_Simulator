@@ -46,13 +46,11 @@ public:
     };
 
     AVLTree(){
-        //cout<<"Seconds constructor\n";
         root=nullptr;
     }
     
     ~AVLTree(){
-        //cout<<"Seconds destructor\n";
-        //root=makeEmpty(root);
+        root=makeEmpty(root);
     }
 
     Node* getRoot()const{
@@ -178,11 +176,13 @@ public:
 class Node{
 public:
     Node(const AddOrder& newData ):
-    timestamp{newData.timestamp},nanosecond{newData.nanosecond},orderId{newData.orderId},
+    timestamp{newData.timestamp},nanosecond{newData.nanosecond},
+    orderId{newData.orderId},quantity{newData.quantity},
     orderPrice{newData.orderPrice},right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
     
-    Node(uint32_t newTimestampt,uint32_t newNanosecond,uint64_t newOrderId,uint32_t newOrderPrice):
+    Node(   uint32_t newTimestampt,uint32_t newNanosecond,uint64_t newOrderId,
+            uint32_t quantity,uint32_t newOrderPrice):
     timestamp{newTimestampt},nanosecond{newNanosecond},orderId{newOrderId},
     orderPrice{newOrderPrice},right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
@@ -190,6 +190,7 @@ public:
     int height;
     uint32_t timestamp;
     uint32_t nanosecond;
+    uint32_t quantity;
     uint32_t orderPrice;
     uint64_t orderId;
     Node *right;
@@ -197,13 +198,11 @@ public:
 };
     
     AVLTree(){
-        //cout<<"AddOrder constructor\n";
         root=nullptr;
     }
     
     ~AVLTree(){
-        //cout<<"AddOrder destructor\n";
-        //root=makeEmpty(root);
+        root=makeEmpty(root);
     }
 
     Node* getRoot()const{
@@ -347,13 +346,11 @@ public:
     };
 
     AVLTree(){
-        //cout<<"OrderExecuted constructor\n";
         root=nullptr;
     }
     
     ~AVLTree(){
-        //cout<<"OrderExecuted destructor\n";
-        //root=makeEmpty(root);
+        root=makeEmpty(root);
     }
 
     Node* getRoot()const{
@@ -495,13 +492,11 @@ public:
     };
 
     AVLTree(){
-        //cout<<"OrderDelete constructor\n";
         root=nullptr;
     }
     
     ~AVLTree(){
-        //cout<<"OrderDelete destructor\n";
-        //root=makeEmpty(root);
+        root=makeEmpty(root);
     }
 
     Node* getRoot()const{

@@ -18,11 +18,11 @@ int main(){
 
     cout<<"calculation result was written to the TWAP.txt file..\n";
 
-    // cout<<"VWAP calculating...\n";
+    cout<<"VWAP calculating...\n";
 
-    // result=imp->compute(file,VWAP_CALCULATE);
+    imp->compute(file,VWAP_CALCULATE);
 
-    // cout<<"VWAP result:"<<result<<endl;
+    cout<<"calculation result was written to the VWAP.txt file..\n";
 
     return 0;
 }

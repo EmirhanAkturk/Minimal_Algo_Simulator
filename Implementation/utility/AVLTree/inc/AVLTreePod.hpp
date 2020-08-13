@@ -20,6 +20,7 @@ struct AddOrder
     uint32_t timestamp;
     uint32_t nanosecond;
     uint64_t orderId;
+    uint32_t quantity;
     uint32_t orderPrice;
 
 };

@@ -1,5 +1,4 @@
 #include "../inc/TWAP.hpp"
-//#include "../../utility/AVLTree/inc/AVLTree.hpp"
 
 // uint32_t TWAP:: totalPrice=0;
 // int TWAP:: messageCount =0;
@@ -38,7 +37,9 @@ void TWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Bar>>* graph){
         for(;nanoItr!=keyItr->second.getMapEnd();++nanoItr){
             if(isFirst){
                 uint32_t open=nanoItr->second.open;
-                bar=new Bar(open);
+                uint32_t quantity=nanoItr->second.quantity;
+                
+                bar=new Bar(open,quantity);
                 isFirst=false;
             }
 
