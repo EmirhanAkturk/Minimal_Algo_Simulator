@@ -19,10 +19,10 @@ public:
 private:
 
 
-    //void calculateAveragePrice(Graph<uint32_t,Value>* graph);
+    void calculateAveragePrice(Graph<uint32_t,Bar>* graph);
     void calculateTotalPrice(AVLTree<AddOrder>::Node* node);
 
-    //void insertBar(AVLTree<AddOrder>::Node* node,Graph<uint32_t,Value>* graph);
+    void insertBar(AVLTree<AddOrder>::Node* node,Graph<uint32_t,Bar>* graph);
     
     static uint32_t totalPrice;
     static int messageCount;

@@ -7,7 +7,7 @@
 
 AlgoHandler::AlgoHandler():isRead{false},STree{new AVLTree<Seconds>},
 AOTree{new AVLTree<AddOrder>},OETree{new AVLTree<OrderExecuted>},
-ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Value>}
+ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Bar> >}
 { /* deliberately left blank. */  }
 
 double AlgoHandler::compute(const char* file,char calculateChoice){
@@ -28,11 +28,9 @@ double AlgoHandler::compute(const char* file,char calculateChoice){
         runtime=clock() - tStart;
         cout<<"function seconds time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
         
-        ofstream outFileA("newAddOrder.txt");
+        ofstream outFileA("outputFiles/timestamps.txt");
         
         graph->writeFile(outFileA);
-
-
 
         ofstream outFileB("newSeconds.txt");
         STree->writeFile(outFileB,INORDER);
@@ -57,10 +55,9 @@ double AlgoHandler::compute(const char* file,char calculateChoice){
 
 }
 
+
 void AlgoHandler::functionSeconds(){
     AVLTree<Seconds>::Node * Sroot=STree->getRoot();
-
-    //uint32_t timestamp = Sroot->timestamp;
     
     if (Sroot == NULL) 
        return; 
@@ -98,11 +95,7 @@ void AlgoHandler::functionSeconds(){
 
 
 void AlgoHandler::functionAddOrder(uint32_t timestamp,ofstream& outFile){
-    //AVLTree<Seconds>::Node * Sroot=STree->getRoot();
-
     AVLTree<AddOrder>::Node * AOroot=AOTree->getRoot();
-
-    //uint32_t timestamp = Sroot->timestamp;
     
     if (AOroot == NULL) 
        return; 
@@ -121,10 +114,7 @@ void AlgoHandler::functionAddOrder(uint32_t timestamp,ofstream& outFile){
     { 
         // Pop the top item from stack and print it 
         AVLTree<AddOrder>::Node *node = AOstack.top(); 
-        // if(node->timestamp==timestamp){
-        //     outFile << node->timestamp<<";"<<node->nanosecond<<";"
-        //             <<node->orderId<<";"<<node->orderPrice<<endl;
-        // }
+        
         if(node->timestamp==timestamp){
             graph->addEdge(timestamp,node->nanosecond,node->orderPrice);
         }
