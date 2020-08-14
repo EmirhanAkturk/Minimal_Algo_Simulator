@@ -18,22 +18,33 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         FileManager::fileRead(file,STree,AOTree,OETree,ODTree);
         
         clock_t runtime=clock() - tStart;
-        cout<<"Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+        cout<<"FileRead Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
         tStart = clock();
 
         fillTimestampGraph();
-        // AOTree->writeFile(outFileA,INORDER);
         
         runtime=clock() - tStart;
         cout<<"fill Timestamp Graph time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
         
+
+        tStart = clock();
+
         ofstream outFileA("outputFiles/timestamps.txt");
         
         graph->writeFile(outFileA);
+        
+        runtime=clock() - tStart;
+        cout<<"Timestamp Graph writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
-        ofstream outFileB("AddOrder.txt");
+
+        tStart = clock();
+
+        ofstream outFileB("outputFiles/AddOrder.txt");
         AOTree->writeFile(outFileB,INORDER);
+        
+        runtime=clock() - tStart;
+        cout<<"Add Order Tree writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
         isRead=true;
     }
