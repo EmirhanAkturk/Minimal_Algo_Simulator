@@ -1,4 +1,4 @@
-OFILES =  main.o AlgoHandler.o FileManager.o TWAP.o VWAP.o AVLTree.o Graph.o
+OFILES =  main.o AbstractClient.o AlgoHandler.o FileManager.o TWAP.o VWAP.o AVLTree.o Graph.o
 TARGET = main
 COMPILER = g++-10
 # TXTFILES = TwapAddOrder.txt VwapAddOrder.txt
@@ -10,9 +10,10 @@ clean:
 	rm $(OFILES) $(TXTFILES)
 
 # below this is the output of "g++10 -MM":
-main.o: main.cpp Implementation/AlgoHandler/inc/AlgoHandler.hpp \
+main.o: main.cpp Client/AbstractClient/inc/AbstractClient.hpp \
+ Implementation/AlgoHandler/inc/AlgoHandler.hpp \
  Implementation/AlgoHandler/inc/../../AbstractImp/inc/AbstractImp.hpp \
- Implementation/utility/inc/std.hpp
+ Implementation/AlgoHandler/inc/../../utility/inc/std.hpp
 	$(COMPILER) main.cpp -c
 TWAP.o: Implementation/TWAP/src/TWAP.cpp \
  Implementation/TWAP/src/../inc/TWAP.hpp \
@@ -59,3 +60,7 @@ Graph.o: Implementation/utility/Graph/src/Graph.cpp \
  Implementation/utility/Graph/src/../inc/../../inc/std.hpp \
  Implementation/utility/Graph/src/../inc/GraphPod.hpp
 	$(COMPILER) Implementation/utility/Graph/src/Graph.cpp -c
+AbstractClient.o: Client/AbstractClient/src/AbstractClient.cpp \
+ Client/AbstractClient/src/../inc/AbstractClient.hpp \
+ Client/AbstractClient/src/../../../Implementation/AbstractImp/inc/AbstractImp.hpp
+	$(COMPILER) Client/AbstractClient/src/AbstractClient.cpp -c
