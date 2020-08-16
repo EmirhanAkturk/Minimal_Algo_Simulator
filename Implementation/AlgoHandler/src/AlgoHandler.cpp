@@ -1,12 +1,12 @@
 #include "../inc/AlgoHandler.hpp"
-#include "../../FileManager/inc/FileManager.hpp"
+#include "../../DataManager/inc/DataManager.hpp"
 #include "../../utility/AVLTree/inc/AVLTree.hpp"
 #include "../../TWAP/inc/TWAP.hpp"
 #include "../../VWAP/inc/VWAP.hpp"
 
 
-AlgoHandler::AlgoHandler():isRead{false},STree{new AVLTree<Seconds>},
-AOTree{new AVLTree<AddOrder>},OETree{new AVLTree<OrderExecuted>},
+AlgoHandler::AlgoHandler():isRead{false},
+STree{new AVLTree<Seconds>},OETree{new AVLTree<OrderExecuted>},
 ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Value> >}
 { /* deliberately left blank. */  }
 
@@ -17,14 +17,14 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         
         clock_t tStart = clock();
 
-        FileManager::fileRead(file,STree,AOTree,OETree,ODTree);
+        DataManager::fillTrees(file,STree,OETree,ODTree);
         
         clock_t runtime=clock() - tStart;
         cout<<"FileRead Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
         tStart = clock();
 
-        fillTimestampGraph();
+        fillGraph();
         
         runtime=clock() - tStart;
         cout<<"fill Timestamp Graph time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
@@ -72,7 +72,7 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
 }
 
 
-void AlgoHandler::fillTimestampGraph(){
+void AlgoHandler::fillGraph(){
     AVLTree<Seconds>::Node * Sroot=STree->getRoot();
     
     if (Sroot == NULL) 

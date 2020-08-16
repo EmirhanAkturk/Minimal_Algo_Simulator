@@ -1,45 +1,43 @@
 #include "../../utility/AVLTree/inc/AVLTree.hpp"
-#include "../inc/FileManager.hpp"
+#include "../inc/DataManager.hpp"
 
 using std::istringstream;
 using std::ifstream;
 
-uint32_t FileManager::curTimestamp=0;
+uint32_t DataManager::curTimestamp=0;
 
 template<class T>
-inline void FileManager::addMessage(AVLTree<T>* tree,const T& message){
+inline void DataManager::addMessage(AVLTree<T>* tree,const T& message){
     tree->insert(message);
 }
 
-void  FileManager::fileRead(const char * file,
+void  DataManager::fillTrees(const char * file,
                             AVLTree<Seconds>*STree,
-                            AVLTree<AddOrder>*AOTree,
                             AVLTree<OrderExecuted>*OETree,
                             AVLTree<OrderDelete>*ODTree)
 {
 
     ifstream inFile(file);
     while(!inFile.eof()){
-        // clock_t start=clock();
+
         string line=readLine(inFile);
-        findValues(line,STree,AOTree,OETree,ODTree);
-    
-        // if(line == ";")//tekrar bak
-        //         break; */
+
+        if(line.size()>1){
+            findValues(line,STree,OETree,ODTree);
+        }
     }
 
 }
 
-inline string FileManager::readLine(ifstream& inFile){
+inline string DataManager::readLine(ifstream& inFile){
     string line;
     inFile>>line;
     return line;
 }
 
 
-void FileManager::findValues(const string & line,
+void DataManager::findValues(const string & line,
                         AVLTree<Seconds>*STree,
-                        AVLTree<AddOrder>*AOTree,
                         AVLTree<OrderExecuted>*OETree,
                         AVLTree<OrderDelete>*ODTree)
 {
@@ -49,7 +47,7 @@ void FileManager::findValues(const string & line,
     flag=findColumn(inString,flag,2);
     
     if(flag!=2){
-        cerr<<flag<<"Incorrect column value!!\n";
+        cerr<<"Incorrect column value:"<<flag<<endl;
         exit(1);
     }
 
@@ -57,26 +55,25 @@ void FileManager::findValues(const string & line,
     inString>>c;
     switch(c){
         case SECONDS:{
-            Seconds messageT = fileSeconds(inString,flag);
+            Seconds messageT = fillSecondsTree(inString,flag);
             curTimestamp=messageT.timestamp;
             addMessage(STree,messageT);
             break;
             }
         case ADD_ORDER_TYPE:{ 
-            AddOrder messageA = fileAddOrder(inString,flag);
+            AddOrder messageA = fillAddOrderTree(inString,flag);
             AVLTree<Seconds>::Node* query=STree->search(curTimestamp);
             query->AOTree->insert(messageA);
-            //addMessage(AOTree,messageA);
             break;
             }
         
         case ORDER_EXECUTED_TYPE:{
-            OrderExecuted messageE = fileOrderExecute(inString,flag);
+            OrderExecuted messageE = fillOrderExecutedTree(inString,flag);
             addMessage(OETree,messageE);
             break;
             }
         case ORDER_DELETE_TYPE:{
-            OrderDelete messageD = fileOrderDelete(inString,flag);
+            OrderDelete messageD = fillOrderDeleteTree(inString,flag);
             addMessage(ODTree,messageD);
             break;
             }
@@ -89,7 +86,7 @@ void FileManager::findValues(const string & line,
 }
 
 
-int FileManager::findColumn(istringstream& inString,int flag,int collumn){
+int DataManager::findColumn(istringstream& inString,int flag,int collumn){
     char c;
     while(!inString.eof() && flag<collumn){
         inString>>c;
@@ -101,7 +98,7 @@ int FileManager::findColumn(istringstream& inString,int flag,int collumn){
 }
 
 
-Seconds FileManager::fileSeconds(istringstream &inString,int flag){
+Seconds DataManager::fillSecondsTree(istringstream &inString,int flag){
     
     Seconds messageT;
     
@@ -116,7 +113,7 @@ Seconds FileManager::fileSeconds(istringstream &inString,int flag){
 }
 
 
-AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
+AddOrder DataManager::fillAddOrderTree(istringstream &inString,int flag){
     
     AddOrder messageA;
     
@@ -161,7 +158,7 @@ AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
 }
 
 
-OrderExecuted FileManager::fileOrderExecute(istringstream &inString,int flag){
+OrderExecuted DataManager::fillOrderExecutedTree(istringstream &inString,int flag){
     OrderExecuted messageE;
 
     flag=findColumn(inString,flag,3);
@@ -183,7 +180,7 @@ OrderExecuted FileManager::fileOrderExecute(istringstream &inString,int flag){
 }
 
 
-OrderDelete FileManager::fileOrderDelete(istringstream &inString,int flag){
+OrderDelete DataManager::fillOrderDeleteTree(istringstream &inString,int flag){
     OrderDelete messageD;
 
     flag=findColumn(inString,flag,3);

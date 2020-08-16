@@ -14,11 +14,12 @@ enum choice{
 template<class T>
 class AVLTree;
 
+//AVLTree<Seconds>::Node;
+
 template<class K,class V>
 class Graph;
 
 struct Value;
-struct Bar;
 struct Seconds;
 struct AddOrder;
 struct OrderDelete;
@@ -32,7 +33,8 @@ public:
     
 private:
     AVLTree<Seconds>*STree;
-    AVLTree<AddOrder>*AOTree;
+    //AVLTree<AddOrder>*AOTree;  //Inside the Stree.
+
     AVLTree<OrderDelete>*ODTree;
     AVLTree<OrderExecuted>*OETree;
 
@@ -40,7 +42,7 @@ private:
 
     bool isRead;
 
-    void fillTimestampGraph();
+    void fillGraph();
     void fillNanosecondGraph(AVLTree<Seconds>::Node *node);
 };
 
