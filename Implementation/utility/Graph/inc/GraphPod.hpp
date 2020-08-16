@@ -1,4 +1,8 @@
 struct Bar{
+    Bar(const Bar& b):open{b.open},high{b.high},
+    low{b.low},close{b.close},quantity{b.quantity}
+    {}
+
     Bar(uint32_t newPrice,uint32_t newQuantity):open{newPrice},
     high{newPrice},low{newPrice},close{newPrice},quantity{newQuantity}
     {}
@@ -11,4 +15,18 @@ struct Bar{
     uint32_t low;
     uint32_t close;
     uint32_t quantity;
+};
+
+struct Value{
+    
+    Value(const Bar&  newBar):
+    bar{Bar(newBar)},next{nullptr}
+    { }
+
+    Value(uint32_t newPrice,uint32_t newQuantity):
+    bar{Bar(newPrice,newQuantity)},next{nullptr}
+    { }
+
+    Bar bar;
+    Value* next;
 };

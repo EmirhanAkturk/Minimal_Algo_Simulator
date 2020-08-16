@@ -18,20 +18,20 @@ class Graph;
 */
 
 template<>
-class Graph<uint32_t, Bar> {   
+class Graph<uint32_t, Value> {   
 public: 
 	Graph();// Constructor 
 
     ~Graph();// Destructor
 
 	// function to add an edge to graph 
-	void addEdge(uint32_t nanosecond,const Bar& value); 
+	void addEdge(uint32_t nanosecond,const Value& value); 
 	
     void addEdge(uint32_t vertex,uint32_t newPrice,uint32_t newQuantity);
 
     void removeEdge(uint32_t vertex);
 
-    inline std::map<uint32_t,Bar>::iterator search(uint32_t vertex){
+    inline std::map<uint32_t,Value>::iterator search(uint32_t vertex){
         return map->find(vertex);
     }
 
@@ -39,16 +39,16 @@ public:
 
     void writeFile(std::ofstream &outFile);
 
-    inline std::map<uint32_t,Bar>::iterator getMapBegin(){
+    inline std::map<uint32_t,Value>::iterator getMapBegin(){
         return map->begin();
     }
 
-    inline std::map<uint32_t,Bar>::iterator getMapEnd(){
+    inline std::map<uint32_t,Value>::iterator getMapEnd(){
         return map->end();
     }
 
 private:
-    std::map<uint32_t,Bar>*map;
+    std::map<uint32_t,Value>*map;
 };
 
 
@@ -63,8 +63,8 @@ private:
 */
 
 template<>
-class Graph<uint32_t, Graph<uint32_t, Bar>> {  
-    //Graph<timestamp, Graph<nanoseconds, Bar> > 
+class Graph<uint32_t, Graph<uint32_t, Value>> {  
+    //Graph<timestamp, Graph<nanoseconds, Value> > 
 public: 
 	Graph();// Constructor 
 
@@ -77,23 +77,23 @@ public:
 
     void removeEdge(uint32_t timestamp);
 
-    inline std::map<uint32_t,Graph<uint32_t, Bar>>::iterator search(uint32_t timestamp){
+    inline std::map<uint32_t,Graph<uint32_t, Value>>::iterator search(uint32_t timestamp){
         return map->find(timestamp);
     }
     void print();
 
     void writeFile(std::ofstream &outFile);
 
-    inline std::map<uint32_t, Graph<uint32_t, Bar>>::iterator getMapBegin(){
+    inline std::map<uint32_t, Graph<uint32_t, Value>>::iterator getMapBegin(){
         return map->begin();
     }
 
-    inline std::map<uint32_t, Graph<uint32_t, Bar>>::iterator getMapEnd(){
+    inline std::map<uint32_t, Graph<uint32_t, Value>>::iterator getMapEnd(){
         return map->end();
     }
 
 private:
-    std::map<uint32_t,Graph<uint32_t, Bar>>*map;
+    std::map<uint32_t,Graph<uint32_t, Value>>*map;
 };
 
 

@@ -9,7 +9,7 @@ int main(){
     
     AbstractClient * abs= new RefinedAbstractClient(imp);
 
-    const char *file = "documentation/AddOrderMessage.txt";
+    const char *file = "documentation/SecondsandAddOrderMessage.txt";
 
     cout<<"Twap calculating...\n";
 

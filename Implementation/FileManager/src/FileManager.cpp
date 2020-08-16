@@ -64,7 +64,9 @@ void FileManager::findValues(const string & line,
             }
         case ADD_ORDER_TYPE:{ 
             AddOrder messageA = fileAddOrder(inString,flag);
-            addMessage(AOTree,messageA);
+            AVLTree<Seconds>::Node* query=STree->search(curTimestamp);
+            query->AOTree->insert(messageA);
+            //addMessage(AOTree,messageA);
             break;
             }
         
@@ -133,6 +135,13 @@ AddOrder FileManager::fileAddOrder(istringstream &inString,int flag){
         exit(1);
     }
     inString>>messageA.orderId;
+
+    flag=findColumn(inString,flag,5);
+    if(flag!=5){
+        cerr<<"Incorrect column value!!\n";
+        exit(1);
+    }
+    inString>>messageA.orderBookId;
 
     flag=findColumn(inString,flag,8);
     if(flag!=8){

@@ -29,7 +29,6 @@ AVLTree<Seconds>::Node* AVLTree<Seconds>::insertNode(Node* node, const Seconds& 
     Node *query= searchNode(node,newData.timestamp);
 
     if(query!=nullptr){
-        
         return node;
     }
 
@@ -115,6 +114,7 @@ AVLTree<Seconds>::Node* AVLTree<Seconds>::removeNode(Node* node,uint32_t timesta
 
             // Copy the inorder successor's data to this Node
             node->timestamp=temp->timestamp;
+            //node->AOTree=temp->AOTree;
 
             // remove the inorder successor
             node->right=removeNode(node->right,temp->timestamp);
@@ -398,6 +398,7 @@ AVLTree<AddOrder>::Node * AVLTree<AddOrder>::insertNode(Node * node, const AddOr
         if(query->orderPrice != newData.orderPrice){
             query->timestamp=newData.timestamp;//update timestamp value
             query->nanosecond=newData.nanosecond;//update nanosecond value
+            query->orderBookId=newData.orderBookId;//update orderBookId value
             query->quantity=newData.quantity;//update quantity value
             query->orderPrice=newData.orderPrice;//update price value
         }
@@ -485,12 +486,12 @@ AVLTree<AddOrder>::Node* AVLTree<AddOrder>::removeNode(Node* node,uint64_t order
             Node * temp = findMin(node->right);
 
             // Copy the inorder successor's data to this Node
-            node->timestamp=temp->timestamp;
-            node->nanosecond=temp->nanosecond;
-            node->orderId=temp->orderId;
-            node->quantity=temp->quantity;
-            node->orderPrice=temp->orderPrice;
-
+            node->timestamp=temp->timestamp;//update timestamp value
+            node->nanosecond=temp->nanosecond;//update nanosecond value
+            node->orderId=temp->orderId;//update orderId value
+            node->orderId=temp->orderBookId;//update orderBookId value
+            node->quantity=temp->quantity;//update quantity value
+            node->orderPrice=temp->orderPrice;//update price value
 
             // remove the inorder successor
             node->right=removeNode(node->right,temp->orderId);
@@ -672,7 +673,7 @@ void AVLTree<AddOrder>::inorder(Node* node)const{
 
     inorder(node->left);
     cout<< node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
-        <<node->quantity<<";"<<node->orderPrice<<endl;
+        <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
     inorder(node->right);
 }
 
@@ -682,7 +683,7 @@ void AVLTree<AddOrder>::preorder(Node* node)const{
         return;
 
     cout<< node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
-        <<node->quantity<<";"<<node->orderPrice<<endl;
+        <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
 
     preorder(node->left);
     preorder(node->right);
@@ -696,7 +697,7 @@ void AVLTree<AddOrder>::postorder(Node* node)const{
     postorder(node->left);
     postorder(node->right);
     cout<< node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
-        <<node->quantity<<";"<<node->orderPrice<<endl;
+        <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
     
 }
 
@@ -709,8 +710,8 @@ void  AVLTree<AddOrder>::writeInorder(Node * node,ofstream & outFile)const{
     writeInorder(node->left,outFile);
 
     // then deal with the Node 
-    outFile << node->timestamp<<";"<<node->nanosecond<<";"<<node->orderId<<";"
-            <<node->quantity<<";"<<node->orderPrice<<endl;
+    outFile << node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
+            <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
     // now recur on right subtree 
     writeInorder(node->right,outFile);
 }
@@ -735,8 +736,8 @@ void  AVLTree<AddOrder>::writeItrPreorder(Node * root,ofstream & outFile)const{
         // Pop the top item from stack and print it 
         Node *node = nodeStack.top(); 
 
-        outFile << node->timestamp<<";"<<node->nanosecond<<";"<<node->orderId<<";"
-                <<node->quantity<<";"<<node->orderPrice<<endl;
+        outFile << node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
+                <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
 
         nodeStack.pop(); 
   
@@ -753,8 +754,8 @@ void  AVLTree<AddOrder>::writePreorder(Node * node,ofstream & outFile)const{
         return;
     
     // first recur on node
-    outFile << node->timestamp<<";"<<node->nanosecond<<";"<<node->orderId<<";"
-            <<node->quantity<<";"<<node->orderPrice<<endl;
+    outFile << node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
+            <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
 
     // then deal with the left subtree
     writePreorder(node->left,outFile);
@@ -775,8 +776,8 @@ void  AVLTree<AddOrder>::writePostorder(Node * node,ofstream & outFile)const{
     writePostorder(node->right,outFile);
     
     // then deal with the Node 
-    outFile << node->timestamp<<";"<<node->nanosecond<<";"<<node->orderId<<";"
-            <<node->quantity<<";"<<node->orderPrice<<endl;
+    outFile << node->timestamp<<";"<< node->nanosecond<<";"<<node->orderId<<";"
+            <<node->orderBookId<<";"<<node->quantity<<";"<<node->orderPrice<<endl;
 
 }
 

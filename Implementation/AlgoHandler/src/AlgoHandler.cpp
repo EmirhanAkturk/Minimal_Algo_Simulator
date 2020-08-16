@@ -7,10 +7,12 @@
 
 AlgoHandler::AlgoHandler():isRead{false},STree{new AVLTree<Seconds>},
 AOTree{new AVLTree<AddOrder>},OETree{new AVLTree<OrderExecuted>},
-ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Bar> >}
+ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Value> >}
 { /* deliberately left blank. */  }
 
 void AlgoHandler::compute(const char* file,char calculateChoice){
+    clock_t computeStart=clock();
+
     if(isRead==false){
         
         clock_t tStart = clock();
@@ -38,13 +40,13 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         cout<<"Timestamp Graph writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
 
-        tStart = clock();
+        // tStart = clock();
 
-        ofstream outFileB("outputFiles/AddOrder.txt");
-        AOTree->writeFile(outFileB,INORDER);
+        // ofstream outFileB("outputFiles/AddOrder.txt");
+        // AOTree->writeFile(outFileB,INORDER);
         
-        runtime=clock() - tStart;
-        cout<<"Add Order Tree writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+        // runtime=clock() - tStart;
+        // cout<<"Add Order Tree writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
         isRead=true;
     }
@@ -62,6 +64,10 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
 
     else
         cerr<<"Invalid calculate choice!!\n";
+
+    clock_t computeRuntime=clock() - computeStart;
+
+    cout<<"compute Time taken:"<<(double)1000*(computeRuntime)/CLOCKS_PER_SEC<<"ms\n";
 
 }
 
@@ -89,7 +95,8 @@ void AlgoHandler::fillTimestampGraph(){
         AVLTree<Seconds>::Node *node = Sstack.top(); 
 
         //cout<<node->timestamp<<endl;
-        fillNanosecondGraph(node->timestamp);
+
+        fillNanosecondGraph(node);
 
         Sstack.pop(); 
   
@@ -103,8 +110,8 @@ void AlgoHandler::fillTimestampGraph(){
 
 
 
-void AlgoHandler::fillNanosecondGraph(uint32_t timestamp){
-    AVLTree<AddOrder>::Node * AOroot=AOTree->getRoot();
+void AlgoHandler::fillNanosecondGraph(AVLTree<Seconds>::Node *Snode){
+    AVLTree<AddOrder>::Node * AOroot=Snode->AOTree->getRoot();
     
     if (AOroot == NULL) 
        return; 
@@ -124,8 +131,8 @@ void AlgoHandler::fillNanosecondGraph(uint32_t timestamp){
         // Pop the top item from stack and print it 
         AVLTree<AddOrder>::Node *node = AOstack.top(); 
         
-        if(node->timestamp==timestamp){
-            graph->addEdge(timestamp,node->nanosecond,node->orderPrice,node->quantity);
+        if(node->orderBookId==73616){
+            graph->addEdge(Snode->timestamp,node->nanosecond,node->orderPrice,node->quantity);
         }
 
         AOstack.pop(); 

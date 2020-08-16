@@ -15,7 +15,7 @@ public:
     { /* deliberately left blank. */  }
 
     //double calculate(AVLTree<AddOrder>::Node* node);
-    void calculate(Graph<uint32_t,Graph<uint32_t,Bar>>* graph);
+    void calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph);
 
 private:
 

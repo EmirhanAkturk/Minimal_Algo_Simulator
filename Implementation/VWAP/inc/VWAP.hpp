@@ -9,7 +9,7 @@ public:
     VWAP()
     { /* deliberately left blank. */  }
 
-    void calculate(Graph<uint32_t,Graph<uint32_t,Bar>>* graph);              
+    void calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph);              
 
 private:
 

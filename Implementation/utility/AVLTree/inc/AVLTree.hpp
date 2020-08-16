@@ -17,151 +17,6 @@ template<class T>
 class AVLTree;
 
 
-/* 
-############################################
-Template Specialization for Seconds
-############################################
-*/
-
-
-template <>
-class AVLTree<Seconds>{
-public:
-    class Node{
-    public:
-        Node(const Seconds& newData ):
-        timestamp{newData.timestamp},
-        right{nullptr},left{nullptr},height{0}
-        { /* deliberately left blank */}
-        
-        Node(uint32_t newTimestamp):
-        timestamp{newTimestamp},
-        right{nullptr},left{nullptr},height{0}
-        { /* deliberately left blank */}
-        
-        int height;
-        uint32_t timestamp;
-        Node *right;
-        Node *left;
-    };
-
-    AVLTree(){
-        root=nullptr;
-    }
-    
-    ~AVLTree(){
-        root=makeEmpty(root);
-    }
-
-    Node* getRoot()const{
-        return root;
-    }
-    
-    void insert(const Seconds& data){
-        root = insertNode(root,data);
-    }
-
-    bool remove(const Seconds& data){
-        Node *query = searchNode(root, data.timestamp);
-        if(query==nullptr){
-            return false;//If not found, it cannot be deleted
-        }
-
-        root = removeNode(root,data.timestamp);
-        
-        return true;
-    }
-
-    bool remove(uint32_t timestamp){
-        Node *query = searchNode(root, timestamp);
-        if(query==nullptr){
-            return false;//If not found, it cannot be deleted
-        }
-
-        root = removeNode(root,timestamp);
-        
-        return true;
-    }
-
-
-    bool search(const Seconds& data) {
-        Node *query = searchNode(root, data.timestamp);
-        
-        if(query!=nullptr)
-            return true;
-
-        else
-            return false;
-    }
-
-    bool search(uint32_t timestamp) {
-        Node *query = searchNode(root, timestamp);
-        
-        if(query!=nullptr)
-            return true;
-
-        else
-            return false;
-    }
-
-
-    void print(int choice)const{//1:inorder,2:preorder,3:postorder
-        if(choice == 1)
-            inorder(root);
-        else if(choice==2)
-            preorder(root);
-        else if(choice==3)
-            postorder(root);
-        else cout<<"invalid selection!\n";
-
-        cout << endl;
-    }
-
-    void writeFile(ofstream & outFile,int choice)const{//1:inorder,2:preorder,3:postorder
-        if(choice==1)
-            writeInorder(root,outFile);
-        else if(choice==2)
-            writePreorder(root,outFile);
-        else if(choice==3)
-            writePostorder(root,outFile);
-        
-        else cout<<"invalid selection!\n";
-    }
-
-private:
-    Node* root;
-
-    Node* insertNode(Node* node, const Seconds& data);
-
-    //Node* removeNode(Node* node,const Seconds& data);
-    Node* removeNode(Node* node,uint32_t timestamp);
-
-    //Node* searchNode(Node* node, const Seconds& data);
-    Node* searchNode(Node* node, uint32_t timestamp);
-
-    Node* makeEmpty(Node* node);
-
-    Node* doBalanced(Node* node);
-    Node* doBalanced(Node* node, const Seconds& data);
-    
-    Node* rightRotate(Node* node);
-    Node* leftRotate(Node* node);
-
-    Node* findMin(Node* node);
-    Node* findMax(Node* node);
-
-    int getBalance(Node* node);
-    int height(Node * node);
-
-    void inorder(Node* node)const;
-    void preorder(Node* node)const;
-    void postorder(Node* node)const;
-    
-    void  writeInorder(Node * node,ofstream & outFile)const;
-    void  writePreorder(Node * node,ofstream & outFile)const;
-    void  writePostorder(Node * node,ofstream & outFile)const;
-};
-
 
 /* 
 ############################################
@@ -177,14 +32,16 @@ class Node{
 public:
     Node(const AddOrder& newData ):
     timestamp{newData.timestamp},nanosecond{newData.nanosecond},
-    orderId{newData.orderId},quantity{newData.quantity},
-    orderPrice{newData.orderPrice},right{nullptr},left{nullptr},height{0}
+    orderId{newData.orderId},orderBookId{newData.orderBookId},
+    quantity{newData.quantity},orderPrice{newData.orderPrice},
+    right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
     
     Node(   uint32_t newTimestampt,uint32_t newNanosecond,uint64_t newOrderId,
-            uint32_t quantity,uint32_t newOrderPrice):
+            uint32_t newBookId,uint32_t newQuantity,uint32_t newOrderPrice):
     timestamp{newTimestampt},nanosecond{newNanosecond},orderId{newOrderId},
-    orderPrice{newOrderPrice},right{nullptr},left{nullptr},height{0}
+    orderBookId{newBookId},orderPrice{newOrderPrice},quantity{newQuantity},
+    right{nullptr},left{nullptr},height{0}
     { /* deliberately left blank */}
     
     int height;
@@ -192,6 +49,7 @@ public:
     uint32_t nanosecond;
     uint32_t quantity;
     uint32_t orderPrice;
+    uint32_t orderBookId;
     uint64_t orderId;
     Node *right;
     Node *left;
@@ -589,6 +447,159 @@ private:
 
     Node* doBalanced(Node* node);
     Node* doBalanced(Node* node, const OrderDelete& data);
+    
+    Node* rightRotate(Node* node);
+    Node* leftRotate(Node* node);
+
+    Node* findMin(Node* node);
+    Node* findMax(Node* node);
+
+    int getBalance(Node* node);
+    int height(Node * node);
+
+    void inorder(Node* node)const;
+    void preorder(Node* node)const;
+    void postorder(Node* node)const;
+    
+    void  writeInorder(Node * node,ofstream & outFile)const;
+    void  writePreorder(Node * node,ofstream & outFile)const;
+    void  writePostorder(Node * node,ofstream & outFile)const;
+};
+
+
+/* 
+############################################
+Template Specialization for Seconds
+############################################
+*/
+
+
+template <>
+class AVLTree<Seconds>{
+public:
+    class Node{
+    public:
+        Node(const Seconds& newData ):
+        timestamp{newData.timestamp},AOTree{new AVLTree<AddOrder>},
+        right{nullptr},left{nullptr},height{0}
+        { /* deliberately left blank */}
+        
+        Node(uint32_t newTimestamp):
+        timestamp{newTimestamp},AOTree{new AVLTree<AddOrder>},
+        right{nullptr},left{nullptr},height{0}
+        { /* deliberately left blank */}
+        
+        int height;
+        uint32_t timestamp;
+        AVLTree<AddOrder>*AOTree;
+        Node *right;
+        Node *left;
+    };
+
+    AVLTree(){
+        root=nullptr;
+    }
+    
+    ~AVLTree(){
+        root=makeEmpty(root);
+    }
+
+    Node* getRoot()const{
+        return root;
+    }
+    
+    void insert(const Seconds& data){
+        root = insertNode(root,data);
+    }
+
+    bool remove(const Seconds& data){
+        Node *query = searchNode(root, data.timestamp);
+        if(query==nullptr){
+            return false;//If not found, it cannot be deleted
+        }
+
+        root = removeNode(root,data.timestamp);
+        
+        return true;
+    }
+
+    bool remove(uint32_t timestamp){
+        Node *query = searchNode(root, timestamp);
+        if(query==nullptr){
+            return false;//If not found, it cannot be deleted
+        }
+
+        root = removeNode(root,timestamp);
+        
+        return true;
+    }
+
+
+    bool search(const Seconds& data) {
+        Node *query = searchNode(root, data.timestamp);
+        
+        if(query!=nullptr)
+            return true;
+
+        else
+            return false;
+    }
+
+    Node* search(uint32_t timestamp) {
+        Node *query = searchNode(root, timestamp);
+    
+        return query;
+    }
+
+    // bool search(uint32_t timestamp) {
+    //     Node *query = searchNode(root, timestamp);
+        
+    //     if(query!=nullptr)
+    //         return true;
+
+    //     else
+    //         return false;
+    // }
+
+
+    void print(int choice)const{//1:inorder,2:preorder,3:postorder
+        if(choice == 1)
+            inorder(root);
+        else if(choice==2)
+            preorder(root);
+        else if(choice==3)
+            postorder(root);
+        else cout<<"invalid selection!\n";
+
+        cout << endl;
+    }
+
+    void writeFile(ofstream & outFile,int choice)const{//1:inorder,2:preorder,3:postorder
+        if(choice==1)
+            writeInorder(root,outFile);
+        else if(choice==2)
+            writePreorder(root,outFile);
+        else if(choice==3)
+            writePostorder(root,outFile);
+        
+        else cout<<"invalid selection!\n";
+    }
+
+private:
+    Node* root;
+
+    Node* insertNode(Node* node, const Seconds& data);
+
+    //Node* removeNode(Node* node,const Seconds& data);
+    Node* removeNode(Node* node,uint32_t timestamp);
+
+    //Node* searchNode(Node* node, const Seconds& data);
+    Node* searchNode(Node* node, uint32_t timestamp);
+
+    Node* makeEmpty(Node* node);
+
+    Node* doBalanced(Node* node);
+    Node* doBalanced(Node* node, const Seconds& data);
     
     Node* rightRotate(Node* node);
     Node* leftRotate(Node* node);

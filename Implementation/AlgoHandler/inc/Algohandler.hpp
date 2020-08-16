@@ -4,6 +4,7 @@
 #include "../../AbstractImp/inc/AbstractImp.hpp"
 #include "../../utility/inc/std.hpp"
 //#include "../../utility/Graph/inc/Graph.hpp"
+#include "../../utility/AVLTree/inc/AVLTree.hpp"
 
 enum choice{
     TWAP_CALCULATE='T',
@@ -16,6 +17,7 @@ class AVLTree;
 template<class K,class V>
 class Graph;
 
+struct Value;
 struct Bar;
 struct Seconds;
 struct AddOrder;
@@ -34,12 +36,12 @@ private:
     AVLTree<OrderDelete>*ODTree;
     AVLTree<OrderExecuted>*OETree;
 
-    Graph<uint32_t ,Graph<uint32_t, Bar> >*graph;
+    Graph<uint32_t ,Graph<uint32_t, Value>> *graph;
 
     bool isRead;
 
     void fillTimestampGraph();
-    void fillNanosecondGraph(uint32_t timestamp);
+    void fillNanosecondGraph(AVLTree<Seconds>::Node *node);
 };
 
 #endif
