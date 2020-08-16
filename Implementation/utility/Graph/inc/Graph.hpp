@@ -5,6 +5,7 @@
 #include "GraphPod.hpp"
 
 // Class to represent a graph 
+//forward declaration
 template<class K, class V>
 class Graph;
 
@@ -29,6 +30,7 @@ public:
 	
     void addEdge(uint32_t vertex,uint32_t newPrice,uint32_t newQuantity);
 
+    // function to remove an edge to graph 
     void removeEdge(uint32_t vertex);
 
     inline std::map<uint32_t,Value>::iterator search(uint32_t vertex){
@@ -71,18 +73,14 @@ public:
 	~Graph();// Destructor
 
 	// function to add an edge to graph 
-	//void addEdge(uint32_t vertex,const Value& value); 
-	
     void addEdge(uint32_t newTimestamp,uint32_t newNanosecond,uint32_t newPrice,uint32_t newQuantity);
 
+    // function to remove an edge to graph 
     void removeEdge(uint32_t timestamp);
 
     inline std::map<uint32_t,Graph<uint32_t, Value>>::iterator search(uint32_t timestamp){
         return map->find(timestamp);
     }
-    void print();
-
-    void writeFile(std::ofstream &outFile);
 
     inline std::map<uint32_t, Graph<uint32_t, Value>>::iterator getMapBegin(){
         return map->begin();
@@ -92,10 +90,12 @@ public:
         return map->end();
     }
 
+    void print();
+
+    void writeFile(std::ofstream &outFile);
+
 private:
     std::map<uint32_t,Graph<uint32_t, Value>>*map;
 };
 
-
-//#include "../src/Graph.inl"
 #endif

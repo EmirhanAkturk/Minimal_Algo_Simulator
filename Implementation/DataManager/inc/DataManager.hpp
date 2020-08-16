@@ -3,14 +3,17 @@
 
 #include "../../utility/inc/std.hpp"
 
+//forward declaration
 template<class T>
 class AVLTree;
 
 class DataManager{
 public:
 
+    //These operations have been deleted because it is a static class.
     DataManager()=delete;
     DataManager(DataManager&)=delete;
+
 
     static void fillTrees(const char * file,
                         AVLTree<Seconds>*STree,
@@ -35,7 +38,8 @@ private:
 
     template<class T>
     static inline void addMessage(AVLTree<T>* tree,const T& message);
-    static uint32_t curTimestamp;//current timestamp
+
+    static uint32_t curTimestamp;//the last timestamp value read from the file.
 };
 
 #endif

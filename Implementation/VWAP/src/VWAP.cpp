@@ -5,10 +5,17 @@ uint32_t VWAP:: totalVP=0;
 
 void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
     
+    //the file to write the calculation result
     ofstream outFile("outputFiles/VWAP.txt");
 
-    int weight=12;
+    if(!outFile.good()){
+        cerr<<"File  outputFiles/VWAP.txt  couldn't be opened.\n";
+        exit(-1);
+    }
 
+    int weight=12;//for blanks in the table
+
+    //the titles part of the table
     outFile<<std::setw(weight+1)<<"Date"<<std::setw(3*weight/2)<<"Open"<<std::setw(weight)
             <<"High"<<std::setw(weight)<<"Low"<<std::setw(weight)<< "Close"
             <<std::setw(weight)<< "Volume"<<std::setw(weight+5)<< "Typical Price"
@@ -18,7 +25,11 @@ void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
     std::map<uint32_t,Graph<uint32_t,Value>>::iterator keyItr;
     for(keyItr=graph->getMapBegin(); keyItr!=graph->getMapEnd(); ++keyItr){
         const time_t timestamp= keyItr->first;
+
+        //Epoch time converting 
         struct tm *ts = localtime(&timestamp);
+
+        //converted values ​​are assigned in variables.
         int second=ts->tm_sec;
         int minute=ts->tm_min;
         int hour= ts->tm_hour;
@@ -29,12 +40,14 @@ void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
         outFile <<std::setw(2)<<day<<"/"<<std::setw(2)<<month<<"/"<<std::setw(4)<<year
                 <<std::setw(3)<<hour<<":"<<std::setw(2)<<minute<<":"<<std::setw(2)<<second
                 <<std::setw(weight-9);
-        std::map<uint32_t,Value>::iterator nanoItr;
         
-        nanoItr=keyItr->second.getMapBegin();
         
         bool isFirst=true;
         Bar *bar;
+        
+        //for iterative traversal
+        std::map<uint32_t,Value>::iterator nanoItr;
+        nanoItr=keyItr->second.getMapBegin();
         for(;nanoItr!=keyItr->second.getMapEnd();++nanoItr){
             
             Value *v=&nanoItr->second;
@@ -43,12 +56,16 @@ void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
                 v=v->next;
 
             if(isFirst){
+                //Initialize Bar values ​​with first read value
                 uint32_t open=v->bar.open;
                 uint32_t quantity=v->bar.quantity;
                 
                 bar=new Bar(open,quantity);
                 isFirst=false;
             }
+
+
+            //update bar values
 
             if(v->bar.high > bar->high){
                 bar->high=v->bar.high;
@@ -61,13 +78,14 @@ void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
             bar->quantity=v->bar.quantity;
             
         }
-        // cout<<keyItr->first<<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high<<
-        //     std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close<<"\n";
-    
+        
+        //write bar values
         outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
                 <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close
                 <<std::setw(weight)<<bar->quantity;
         
+        
+        //necessary calculations and writing the results to the file
         double typicalPrice= static_cast<double>(bar->high+bar->low+bar->close)/3;
 
         outFile<<std::setw(weight+5)<<typicalPrice;

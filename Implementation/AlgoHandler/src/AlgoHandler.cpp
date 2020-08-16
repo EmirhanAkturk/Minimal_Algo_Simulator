@@ -5,14 +5,17 @@
 #include "../../VWAP/inc/VWAP.hpp"
 
 
+//constructor is doing memory allocation.
 AlgoHandler::AlgoHandler():isRead{false},
 STree{new AVLTree<Seconds>},OETree{new AVLTree<OrderExecuted>},
 ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Value> >}
 { /* deliberately left blank. */  }
 
+
 void AlgoHandler::compute(const char* file,char calculateChoice){
     clock_t computeStart=clock();
 
+    //It is checked if it has been read before in order not to read it again.
     if(isRead==false){
         
         clock_t tStart = clock();
@@ -20,7 +23,7 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         DataManager::fillTrees(file,STree,OETree,ODTree);
         
         clock_t runtime=clock() - tStart;
-        cout<<"FileRead Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
+        cout<<"Fill Trees Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
         tStart = clock();
 
@@ -32,34 +35,34 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
 
         tStart = clock();
 
-        ofstream outFileA("outputFiles/timestamps.txt");
+        ofstream outFile("outputFiles/timestamps.txt");
+
+        if(!outFile.good()){
+            cerr<<"File  outputFiles/timestamps.txt  couldn't be opened.\n";
+            exit(-1);
+        }
         
-        graph->writeFile(outFileA);
+        graph->writeFile(outFile);
         
         runtime=clock() - tStart;
         cout<<"Timestamp Graph writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
 
-
-        // tStart = clock();
-
-        // ofstream outFileB("outputFiles/AddOrder.txt");
-        // AOTree->writeFile(outFileB,INORDER);
-        
-        // runtime=clock() - tStart;
-        // cout<<"Add Order Tree writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
-
         isRead=true;
     }
 
+    //The graph object is sent to the class that will calculate.
+    
+    
     if(calculateChoice == TWAP_CALCULATE){
         TWAP twap;
         twap.calculate(graph);
-        
+        //the calculation results are written in the TWAP.txt file.    
     }
 
     else if(calculateChoice == VWAP_CALCULATE){
         VWAP vwap;
         vwap.calculate(graph);
+        //the calculation results are written in the VWAP.txt file.    
     }
 
     else
@@ -78,12 +81,14 @@ void AlgoHandler::fillGraph(){
     if (Sroot == NULL) 
        return; 
   
+    //iterative preorder traversal
+
     // Create an empty stack and push root to it 
     std::stack<AVLTree<Seconds>::Node *> Sstack; 
     Sstack.push(Sroot); 
   
     /* Pop all items one by one. Do following for every popped item 
-       a) print it 
+       a) process it 
        b) push its right child 
        c) push its left child 
     Note that right child is pushed first so that left is processed first */
@@ -91,10 +96,8 @@ void AlgoHandler::fillGraph(){
 
     while (Sstack.empty() == false) 
     { 
-        // Pop the top item from stack and print it 
+        // Pop the top item from stack and process it 
         AVLTree<Seconds>::Node *node = Sstack.top(); 
-
-        //cout<<node->timestamp<<endl;
 
         fillNanosecondGraph(node);
 
@@ -116,21 +119,24 @@ void AlgoHandler::fillNanosecondGraph(AVLTree<Seconds>::Node *Snode){
     if (AOroot == NULL) 
        return; 
   
+    //iterative preorder traversal
+
     // Create an empty stack and push root to it 
     std::stack<AVLTree<AddOrder>::Node *> AOstack; 
     AOstack.push(AOroot); 
   
     /* Pop all items one by one. Do following for every popped item 
-       a) print it 
+       a) process it 
        b) push its right child 
        c) push its left child 
     Note that right child is pushed first so that left is processed first */
 
     while (AOstack.empty() == false) 
     { 
-        // Pop the top item from stack and print it 
+        // Pop the top item from stack and process it 
         AVLTree<AddOrder>::Node *node = AOstack.top(); 
         
+        //Calculations will be made only for messages with 73616 order book id.
         if(node->orderBookId==73616){
             graph->addEdge(Snode->timestamp,node->nanosecond,node->orderPrice,node->quantity);
         }

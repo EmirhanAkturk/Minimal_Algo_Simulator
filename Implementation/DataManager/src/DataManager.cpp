@@ -4,6 +4,7 @@
 using std::istringstream;
 using std::ifstream;
 
+//initialize curTimestamp value
 uint32_t DataManager::curTimestamp=0;
 
 template<class T>
@@ -18,6 +19,12 @@ void  DataManager::fillTrees(const char * file,
 {
 
     ifstream inFile(file);
+
+    if(!inFile.good()){
+        cerr<<"File  "<<file<< "  couldn't be opened.\n";
+        exit(-1);
+    }
+
     while(!inFile.eof()){
 
         string line=readLine(inFile);

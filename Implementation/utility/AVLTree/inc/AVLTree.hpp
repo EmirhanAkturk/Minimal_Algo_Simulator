@@ -1,6 +1,5 @@
 #ifndef _AVLTREE_HPP_
 #define _AVLTREE_HPP_
-//#pragma once
 
 #include "../../inc/std.hpp"
 #include "AVLTreePod.hpp"
@@ -12,7 +11,7 @@ using std::cout;
 using std::cerr;
 using std::endl;
 
-
+//forward declaration
 template<class T>
 class AVLTree;
 
@@ -551,16 +550,6 @@ public:
         return query;
     }
 
-    // bool search(uint32_t timestamp) {
-    //     Node *query = searchNode(root, timestamp);
-        
-    //     if(query!=nullptr)
-    //         return true;
-
-    //     else
-    //         return false;
-    // }
-
 
     void print(int choice)const{//1:inorder,2:preorder,3:postorder
         if(choice == 1)
@@ -590,10 +579,8 @@ private:
 
     Node* insertNode(Node* node, const Seconds& data);
 
-    //Node* removeNode(Node* node,const Seconds& data);
     Node* removeNode(Node* node,uint32_t timestamp);
 
-    //Node* searchNode(Node* node, const Seconds& data);
     Node* searchNode(Node* node, uint32_t timestamp);
 
     Node* makeEmpty(Node* node);

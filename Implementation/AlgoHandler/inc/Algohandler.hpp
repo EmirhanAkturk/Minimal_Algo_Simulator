@@ -3,22 +3,23 @@
 
 #include "../../AbstractImp/inc/AbstractImp.hpp"
 #include "../../utility/inc/std.hpp"
-//#include "../../utility/Graph/inc/Graph.hpp"
 #include "../../utility/AVLTree/inc/AVLTree.hpp"
+//AVLTree.hpp, Included to be able to access "AVL Tree <Seconds> :: Node".
 
 enum choice{
     TWAP_CALCULATE='T',
     VWAP_CALCULATE='V'
 };
 
+//forward declaration
 template<class T>
 class AVLTree;
 
-//AVLTree<Seconds>::Node;
-
+//forward declaration
 template<class K,class V>
 class Graph;
 
+//forward declarations
 struct Value;
 struct Seconds;
 struct AddOrder;
