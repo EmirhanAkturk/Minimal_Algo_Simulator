@@ -1,7 +1,7 @@
 #include "../inc/VWAP.hpp"
 
-uint32_t VWAP:: totalVolume=0;
-uint32_t VWAP:: totalVP=0;
+uint64_t VWAP:: totalVolume=0;
+uint64_t VWAP:: totalVP=0;
 
 void VWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
     

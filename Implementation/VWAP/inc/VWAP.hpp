@@ -13,8 +13,8 @@ public:
 
 private:
 
-    static uint32_t totalVolume;
-    static uint32_t totalVP;
+    static uint64_t totalVolume;
+    static uint64_t totalVP;
 
 };
 
