@@ -1,5 +1,5 @@
 #ifndef _ABSTRACT_CLIENT_HPP_
-#define _ABSTRACT_CLIENT_HPP
+#define _ABSTRACT_CLIENT_HPP_
 
 //forward declaration
 class AbstractImp;

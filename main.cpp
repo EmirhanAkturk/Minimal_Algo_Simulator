@@ -1,6 +1,18 @@
+#define _DEBUG_
+#ifdef _DEBUG_
+#include "Implementation/TWAP/src/TWAP.cpp"
+#include "Implementation/VWAP/src/VWAP.cpp"
+#include "Implementation/utility/AVLTree/src/AVLTree.cpp"
+#include "Implementation/DataManager/src/DataManager.cpp"
+#include "Implementation/AlgoHandler/src/AlgoHandler.cpp"
+#include "Implementation/utility/Graph/src/Graph.cpp"
+#include "Client/AbstractClient/src/AbstractClient.cpp"
+#endif
+
+#ifndef _DEBUG_
 #include "Client/AbstractClient/inc/AbstractClient.hpp"
 #include "Implementation/AlgoHandler/inc/AlgoHandler.hpp"
-
+#endif
 int main(){
     using std::cout;
     using std::endl;
