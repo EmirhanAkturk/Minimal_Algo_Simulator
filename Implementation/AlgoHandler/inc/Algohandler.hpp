@@ -36,6 +36,7 @@ private:
     AVLTree<Seconds>*STree;
     //AVLTree<AddOrder>*AOTree;  //Inside the Stree.
 
+    AVLTree<OrderBookId>*OBITree;
     AVLTree<OrderDelete>*ODTree;
     AVLTree<OrderExecuted>*OETree;
 

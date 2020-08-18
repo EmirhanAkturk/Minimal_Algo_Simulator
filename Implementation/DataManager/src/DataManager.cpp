@@ -14,6 +14,7 @@ inline void DataManager::addMessage(AVLTree<T>* tree,const T& message){
 
 void  DataManager::fillTrees(const char * file,
                             AVLTree<Seconds>*STree,
+                            AVLTree<OrderBookId>*OBITree,
                             AVLTree<OrderExecuted>*OETree,
                             AVLTree<OrderDelete>*ODTree)
 {
@@ -30,7 +31,7 @@ void  DataManager::fillTrees(const char * file,
         string line=readLine(inFile);
 
         if(line.size()>1){
-            findValues(line,STree,OETree,ODTree);
+            findValues(line,STree,OBITree,OETree,ODTree);
         }
     }
 
@@ -45,6 +46,7 @@ inline string DataManager::readLine(ifstream& inFile){
 
 void DataManager::findValues(const string & line,
                         AVLTree<Seconds>*STree,
+                        AVLTree<OrderBookId>*OBITree,
                         AVLTree<OrderExecuted>*OETree,
                         AVLTree<OrderDelete>*ODTree)
 {
@@ -71,6 +73,7 @@ void DataManager::findValues(const string & line,
             AddOrder messageA = fillAddOrderTree(inString,flag);
             AVLTree<Seconds>::Node* query=STree->search(curTimestamp);
             query->AOTree->insert(messageA);
+            OBITree->insert(messageA.orderBookId);
             break;
             }
         

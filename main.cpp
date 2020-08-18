@@ -1,4 +1,4 @@
-#define _DEBUG_
+//#define _DEBUG_
 #ifdef _DEBUG_
 #include "Implementation/TWAP/src/TWAP.cpp"
 #include "Implementation/VWAP/src/VWAP.cpp"

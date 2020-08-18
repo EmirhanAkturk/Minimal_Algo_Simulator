@@ -6,7 +6,7 @@
 
 
 //constructor is doing memory allocation.
-AlgoHandler::AlgoHandler():isRead{false},
+AlgoHandler::AlgoHandler():isRead{false},OBITree{new AVLTree<OrderBookId>},
 STree{new AVLTree<Seconds>},OETree{new AVLTree<OrderExecuted>},
 ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Value> >}
 { /* deliberately left blank. */  }
@@ -20,7 +20,7 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         
         clock_t tStart = clock();
 
-        DataManager::fillTrees(file,STree,OETree,ODTree);
+        DataManager::fillTrees(file,STree,OBITree,OETree,ODTree);
         
         clock_t runtime=clock() - tStart;
         cout<<"Fill Trees Time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
@@ -32,6 +32,9 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         runtime=clock() - tStart;
         cout<<"fill Timestamp Graph time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
         
+        ofstream outFileB("outputFiles/OrderBookId.txt");
+        
+        OBITree->writeFile(outFileB,INORDER);
 
         tStart = clock();
 

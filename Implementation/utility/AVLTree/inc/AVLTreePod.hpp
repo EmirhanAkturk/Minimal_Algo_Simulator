@@ -15,6 +15,10 @@ struct Seconds{
     uint32_t timestamp;
 };
 
+struct OrderBookId{
+    uint32_t orderBookId;
+};
+
 struct AddOrder
 {   
     uint32_t timestamp;

@@ -17,6 +17,7 @@ public:
 
     static void fillTrees(const char * file,
                         AVLTree<Seconds>*STree,
+                        AVLTree<OrderBookId>*OBITree,
                         AVLTree<OrderExecuted>*OETree,
                         AVLTree<OrderDelete>*ODTree);
 
@@ -26,6 +27,7 @@ private:
 
     static void findValues(const std::string & line,
                         AVLTree<Seconds>*STree,
+                        AVLTree<OrderBookId>*OBITree,
                         AVLTree<OrderExecuted>*OETree,
                         AVLTree<OrderDelete>*ODTree);
 
