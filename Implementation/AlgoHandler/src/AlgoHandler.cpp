@@ -58,13 +58,15 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
     
     if(calculateChoice == TWAP_CALCULATE){
         TWAP twap;
-        twap.calculate(graph);
+        twap.calculate(OBITree);
+        //twap.calculate(graph);
         //the calculation results are written in the TWAP.txt file.    
     }
 
     else if(calculateChoice == VWAP_CALCULATE){
         VWAP vwap;
-        vwap.calculate(graph);
+        vwap.calculate(OBITree);
+        //vwap.calculate(graph);
         //the calculation results are written in the VWAP.txt file.    
     }
 
@@ -139,10 +141,14 @@ void AlgoHandler::fillNanosecondGraph(AVLTree<Seconds>::Node *Snode){
         // Pop the top item from stack and process it 
         AVLTree<AddOrder>::Node *node = AOstack.top(); 
         
+        AVLTree<OrderBookId>::Node *query = OBITree->search(node->orderBookId); 
+        
+        query->graph->addEdge(Snode->timestamp,node->nanosecond,node->orderPrice,node->quantity);
+
         //Calculations will be made only for messages with 73616 order book id.
-        if(node->orderBookId==73616){
-            graph->addEdge(Snode->timestamp,node->nanosecond,node->orderPrice,node->quantity);
-        }
+        // if(node->orderBookId==73616){
+        //     graph->addEdge(Snode->timestamp,node->nanosecond,node->orderPrice,node->quantity);
+        // }
 
         AOstack.pop(); 
   

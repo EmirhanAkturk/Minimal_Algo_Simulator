@@ -4,13 +4,54 @@
 double TWAP:: totalTypicalPrice=0;
 int TWAP:: barCount =0;
 
-void TWAP:: calculate(Graph<uint32_t,Graph<uint32_t,Value>>* graph){
+void TWAP:: calculate(AVLTree<OrderBookId>* OBITree){
+    AVLTree<OrderBookId>::Node * OBIroot=OBITree->getRoot();
+    
+    if (OBIroot == NULL) 
+       return; 
+  
+    //iterative preorder traversal
+
+    // Create an empty stack and push root to it 
+    std::stack<AVLTree<OrderBookId>::Node *> OBIstack; 
+    OBIstack.push(OBIroot); 
+  
+    /* Pop all items one by one. Do following for every popped item 
+       a) process it 
+       b) push its right child 
+       c) push its left child 
+    Note that right child is pushed first so that left is processed first */
+
+
+    while (OBIstack.empty() == false) 
+    { 
+        // Pop the top item from stack and process it 
+        AVLTree<OrderBookId>::Node *node = OBIstack.top(); 
+
+        calculate_and_write(node->graph,node->bookId);
+
+        OBIstack.pop(); 
+  
+        // Push right and left children of the popped node to stack 
+        if (node->right) 
+            OBIstack.push(node->right); 
+        if (node->left) 
+            OBIstack.push(node->left); 
+    } 
+    
+}
+
+void TWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uint32_t OrderBookId){
+    double  totalTypicalPrice= 0;
+    int barCount = 0;
 
     //the file to write the calculation result
-    ofstream outFile("outputFiles/TWAP.txt");
+    string out="./outputFiles/TWAP/"+std::to_string(OrderBookId)+".txt";
+    
+    ofstream outFile(out);
 
     if(!outFile.good()){
-        cerr<<"File  outputFiles/TWAP.txt  couldn't be opened.\n";
+        cerr<<"File  "<<out<<" couldn't be opened.\n";
         exit(-1);
     }
 
