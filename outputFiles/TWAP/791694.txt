@@ -1,4 +1,4 @@
-         Date              Open        High         Low       Close    Typical Price            TWAP
- 2/ 7/2018 10: 0: 3          60          60          60          60               60               60
- 2/ 7/2018 10:27:57          60          60          60          60               60               60
- 2/ 7/2018 14: 0: 0          60          60          60          60               60               60
+         Date              Open        High         Low       Close     Typical Price        TWAP    Message Count
+10/ 7/2018  0: 2: 3          60          60          60          60                60          60           1
+10/ 7/2018 27: 2:57          60          60          60          60                60          60           1
+14/ 7/2018  0: 2: 0          60          60          60          60                60          60           1

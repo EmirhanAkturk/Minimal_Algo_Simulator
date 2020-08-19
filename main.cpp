@@ -6,6 +6,7 @@
 #include "Implementation/DataManager/src/DataManager.cpp"
 #include "Implementation/AlgoHandler/src/AlgoHandler.cpp"
 #include "Implementation/utility/Graph/src/Graph.cpp"
+#include "Implementation/utility/Temp/inc/Temp.hpp"
 #include "Client/AbstractClient/src/AbstractClient.cpp"
 #endif
 

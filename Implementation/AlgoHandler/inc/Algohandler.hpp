@@ -40,12 +40,12 @@ private:
     AVLTree<OrderDelete>*ODTree;
     AVLTree<OrderExecuted>*OETree;
 
-    Graph<uint32_t ,Graph<uint32_t, Value>> *graph;
+    //Graph<uint32_t ,Graph<uint32_t, Value>> *graph;
 
     bool isRead;
 
-    void fillGraph();
-    void fillNanosecondGraph(AVLTree<Seconds>::Node *node);
+    void fillGraphs();
+    void fillNanosecondGraphs(AVLTree<Seconds>::Node *node);
 };
 
 #endif

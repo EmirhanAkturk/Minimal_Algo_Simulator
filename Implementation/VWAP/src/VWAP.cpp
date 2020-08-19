@@ -1,8 +1,5 @@
 #include "../inc/VWAP.hpp"
 
-uint64_t VWAP:: totalVolume=0;
-uint64_t VWAP:: totalVP=0;
-
 void VWAP:: calculate(AVLTree<OrderBookId>* OBITree){
     AVLTree<OrderBookId>::Node * OBIroot=OBITree->getRoot();
     
@@ -42,8 +39,8 @@ void VWAP:: calculate(AVLTree<OrderBookId>* OBITree){
 
 void VWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uint32_t OrderBookId){
     
-    uint64_t  totalVolume=0;
     uint64_t  totalVP=0;
+    uint32_t  totalVolume=0;
 
     //the file to write the calculation result
     string out="./outputFiles/VWAP/"+std::to_string(OrderBookId)+".txt";
@@ -58,11 +55,7 @@ void VWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
     int weight=12;//for blanks in the table
 
     //the titles part of the table
-    outFile<<std::setw(weight+1)<<"Date"<<std::setw(3*weight/2)<<"Open"<<std::setw(weight)
-            <<"High"<<std::setw(weight)<<"Low"<<std::setw(weight)<< "Close"
-            <<std::setw(weight)<< "Volume"<<std::setw(weight+5)<< "Typical Price"
-            <<std::setw(weight)<< "V*P"<<std::setw(weight)<< "Total VP"
-            <<std::setw(weight)<< "Total V"<<std::setw(weight+5)<<"VWAP\n";
+    write_table_title(outFile,weight);
     
     std::map<uint32_t,Graph<uint32_t,Value>>::iterator keyItr;
     for(keyItr=graph->getMapBegin(); keyItr!=graph->getMapEnd(); ++keyItr){
@@ -79,23 +72,31 @@ void VWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
         int month= ts->tm_mon+1;
         int year= ts->tm_year+1900;
         
-        outFile <<std::setw(2)<<day<<"/"<<std::setw(2)<<month<<"/"<<std::setw(4)<<year
-                <<std::setw(3)<<hour<<":"<<std::setw(2)<<minute<<":"<<std::setw(2)<<second
-                <<std::setw(weight-9);
+        //date is written to file
+        write_date( outFile,weight,year,month,
+                    hour,minute,day,second);
         
+        bool isFirst=true;//for open value
+        Bar *bar;//to save bar values
         
-        bool isFirst=true;
-        Bar *bar;
-        
+        //to calculate the number of messages in the timestamp
+        int messageCount=0;
+
         //for iterative traversal
         std::map<uint32_t,Value>::iterator nanoItr;
         nanoItr=keyItr->second.getMapBegin();
         for(;nanoItr!=keyItr->second.getMapEnd();++nanoItr){
             
             Value *v=&nanoItr->second;
+            
+            ++messageCount;
 
-            while(v->next!=nullptr)//go to the most current node
+            //go to the most current node
+            while(v->next!=nullptr)
+            {   
                 v=v->next;
+                ++messageCount;
+            }
 
             if(isFirst){
                 //Initialize Bar values ​​with first read value
@@ -121,32 +122,61 @@ void VWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
             
         }
         
-        //write bar values
-        outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
-                <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close
-                <<std::setw(weight)<<bar->quantity;
+        //The values ​​in the bar are written to the file
+        write_bar(outFile,weight,bar);
         
         
         //necessary calculations and writing the results to the file
         double typicalPrice= static_cast<double>(bar->high+bar->low+bar->close)/3;
 
-        outFile<<std::setw(weight+5)<<typicalPrice;
-
-        uint32_t VP=bar->quantity *typicalPrice;
-        outFile<<std::setw(weight)<<VP;
+        uint64_t VP=bar->quantity *typicalPrice;
         
         totalVP+=VP;
-        outFile<<std::setw(weight)<<totalVP;
         
         totalVolume+=bar->quantity;
-        outFile<<std::setw(weight)<<totalVolume;
-
-        double Vwap=static_cast<double>(totalVP)/static_cast<double>(totalVolume);
-        outFile<<std::setw(weight+5)<<Vwap<<endl;
         
+        double Vwap=static_cast<double>(totalVP)/static_cast<double>(totalVolume);
+        
+        write_result(   outFile,weight,typicalPrice,VP,
+                        totalVP,totalVolume,Vwap,messageCount);
+
         if(bar!=nullptr){
             delete bar;
             bar=nullptr;
         }
     }
+}
+
+inline void VWAP::write_table_title(ofstream & outFile,int weight){
+    outFile <<std::setw(weight+1)<<"Date"<<std::setw(3*weight/2)<<"Open"<<std::setw(weight)
+            <<"High"<<std::setw(weight)<<"Low"<<std::setw(weight)<< "Close"
+            <<std::setw(weight)<< "Volume"<<std::setw(3*weight/2)<< "Typical Price"
+            <<std::setw(weight)<< "V*P"<<std::setw(weight)<< "Total VP"
+            <<std::setw(weight)<< "Total V"<<std::setw(weight)<<"VWAP"
+            <<std::setw(3*weight/2)<<"Message Count\n";
+}
+
+
+inline void VWAP::write_date( ofstream & outFile,int weight,
+                        int year,int month,int day,
+                        int hour,int minute,int second)
+{
+    outFile <<std::setw(2)<<day<<"/"<<std::setw(2)<<month<<"/"<<std::setw(4)<<year
+            <<std::setw(3)<<hour<<":"<<std::setw(2)<<minute<<":"<<std::setw(2)<<second;
+}
+
+
+inline void VWAP::write_bar(ofstream & outFile,int weight,const Bar* bar){
+    outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
+            <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close
+            <<std::setw(weight)<<bar->quantity;
+}
+
+
+inline void VWAP::write_result( ofstream & outFile,int weight,double typicalPrice,uint64_t VP,
+                                uint64_t totalVp,uint32_t totalVolume,double Vwap,int messageCount)
+{
+    outFile <<std::setw(3*weight/2)<<typicalPrice<<std::setw(weight)<<VP
+            <<std::setw(weight)<<totalVp<<std::setw(weight)<<totalVolume
+            <<std::setw(weight)<<Vwap<<std::setw(weight)<<messageCount<<endl;
 }

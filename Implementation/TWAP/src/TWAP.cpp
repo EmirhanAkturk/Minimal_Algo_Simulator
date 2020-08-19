@@ -1,8 +1,8 @@
 #include "../inc/TWAP.hpp"
 
 //initialize values
-double TWAP:: totalTypicalPrice=0;
-int TWAP:: barCount =0;
+double TWAP:: totalTypicalPrice = 0;
+int TWAP:: barCount = 0;
 
 void TWAP:: calculate(AVLTree<OrderBookId>* OBITree){
     AVLTree<OrderBookId>::Node * OBIroot=OBITree->getRoot();
@@ -58,11 +58,9 @@ void TWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
 
     int weight=12;//for blanks in the table
 
-    ////the titles part of the table
-    outFile<<std::setw(weight+1)<<"Date"<<std::setw(3*weight/2)<<"Open"<<std::setw(weight)
-            <<"High"<<std::setw(weight)<<"Low"<<std::setw(weight)<< "Close"
-            <<std::setw(weight+5)<< "Typical Price"<<std::setw(weight+5)<<"TWAP\n";
-    
+    //the titles part of the table
+    write_table_title(outFile,weight);
+
     std::map<uint32_t,Graph<uint32_t,Value>>::iterator keyItr;
     for(keyItr=graph->getMapBegin(); keyItr!=graph->getMapEnd(); ++keyItr){
         const time_t timestamp= keyItr->first;
@@ -78,13 +76,16 @@ void TWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
         int month= ts->tm_mon+1;
         int year= ts->tm_year+1900;
 
-        outFile <<std::setw(2)<<day<<"/"<<std::setw(2)<<month<<"/"<<std::setw(4)<<year
-                <<std::setw(3)<<hour<<":"<<std::setw(2)<<minute<<":"<<std::setw(2)<<second
-                <<std::setw(weight-9);
+        //date is written to file
+        write_date( outFile,weight,year,month,
+                    hour,minute,day,second);
 
 
-        bool isFirst=true;
-        Bar *bar;
+        bool isFirst=true;//for open value
+        Bar *bar;//to save bar values
+        
+        //to calculate the number of messages in the timestamp
+        int messageCount=0;
 
         //for iterative traversal
         std::map<uint32_t,Value>::iterator nanoItr;
@@ -92,9 +93,15 @@ void TWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
         for(;nanoItr!=keyItr->second.getMapEnd();++nanoItr){
             
             Value *v=&nanoItr->second;
+            
+            ++messageCount;
 
-            while(v->next!=nullptr)//go to the most current node
+            //go to the most current node
+            while(v->next!=nullptr)
+            {   
                 v=v->next;
+                ++messageCount;
+            }
 
             if(isFirst){
                 //Initialize Bar values ​​with first read value
@@ -119,27 +126,59 @@ void TWAP:: calculate_and_write(Graph<uint32_t,Graph<uint32_t,Value>>* graph,uin
             bar->quantity=v->bar.quantity;
             
         }
-    
-        //write bar values
-        outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
-                <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close;
-        
 
-        //necessary calculations and writing the results to the file
+        //The values ​​in the bar are written to the file
+        write_bar(outFile,weight,bar);
+
+
+        //Typical price and twap calculation is made
         double typicalPrice= static_cast<double>(bar->open+bar->high+bar->low+bar->close)/4;
-
-        outFile<<std::setw(weight+5)<<typicalPrice;
 
         totalTypicalPrice+=typicalPrice;
         ++barCount;
         
         double Twap=static_cast<double> (totalTypicalPrice)/static_cast<double> (barCount);
 
-        outFile<<std::setw(weight+5)<<Twap<<endl;
-        
+        //results are written to file
+        write_result(outFile,weight,typicalPrice,Twap,messageCount);
+
+
         if(bar!=nullptr){
             delete bar;
             bar=nullptr;
         }
     }
+}
+
+
+inline void TWAP::write_table_title(ofstream & outFile,int weight){
+    outFile <<std::setw(weight+1)<<"Date"<<std::setw(3*weight/2)<<"Open"
+            <<std::setw(weight)<<"High"<<std::setw(weight)<<"Low"
+            <<std::setw(weight)<< "Close"<<std::setw(3*weight/2)<< "Typical Price"
+            <<std::setw(weight)<<"TWAP"<<std::setw(3*weight/2)<<"Message Count\n";
+
+}
+
+
+inline void TWAP::write_date( ofstream & outFile,int weight,
+                        int year,int month,int day,
+                        int hour,int minute,int second)
+{
+    outFile <<std::setw(2)<<day<<"/"<<std::setw(2)<<month<<"/"<<std::setw(4)<<year
+            <<std::setw(3)<<hour<<":"<<std::setw(2)<<minute<<":"<<std::setw(2)<<second;
+}
+
+
+inline void TWAP::write_bar(ofstream & outFile,int weight,const Bar* bar){
+    outFile <<std::setw(weight)<<bar->open<<std::setw(weight)<<bar->high
+            <<std::setw(weight)<<bar->low<<std::setw(weight)<<bar->close;
+}
+
+
+inline void TWAP::write_result(   ofstream & outFile,int weight,
+                            double typicalPrice,double Twap,int messageCount)
+{
+    outFile <<std::setw(3*weight/2)<<typicalPrice
+            <<std::setw(weight)<<Twap
+            <<std::setw(weight)<<messageCount<<endl;
 }

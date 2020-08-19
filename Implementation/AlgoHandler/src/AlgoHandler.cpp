@@ -6,9 +6,9 @@
 
 
 //constructor is doing memory allocation.
-AlgoHandler::AlgoHandler():isRead{false},OBITree{new AVLTree<OrderBookId>},
-STree{new AVLTree<Seconds>},OETree{new AVLTree<OrderExecuted>},
-ODTree{new AVLTree<OrderDelete>},graph{new Graph<uint32_t, Graph<uint32_t,Value> >}
+AlgoHandler::AlgoHandler():isRead{false},
+OBITree{new AVLTree<OrderBookId>},STree{new AVLTree<Seconds>},
+OETree{new AVLTree<OrderExecuted>},ODTree{new AVLTree<OrderDelete>}
 { /* deliberately left blank. */  }
 
 
@@ -27,7 +27,7 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
 
         tStart = clock();
 
-        fillGraph();
+        fillGraphs();
         
         runtime=clock() - tStart;
         cout<<"fill Timestamp Graph time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
@@ -36,16 +36,16 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         
         OBITree->writeFile(outFileB,INORDER);
 
-        tStart = clock();
+        // tStart = clock();
 
-        ofstream outFile("outputFiles/timestamps.txt");
+        // ofstream outFile("outputFiles/timestamps.txt");
 
-        if(!outFile.good()){
-            cerr<<"File  outputFiles/timestamps.txt  couldn't be opened.\n";
-            exit(-1);
-        }
+        // if(!outFile.good()){
+        //     cerr<<"File  outputFiles/timestamps.txt  couldn't be opened.\n";
+        //     exit(-1);
+        // }
         
-        graph->writeFile(outFile);
+        // graph->writeFile(outFile);
         
         runtime=clock() - tStart;
         cout<<"Timestamp Graph writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
@@ -80,7 +80,7 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
 }
 
 
-void AlgoHandler::fillGraph(){
+void AlgoHandler::fillGraphs(){
     AVLTree<Seconds>::Node * Sroot=STree->getRoot();
     
     if (Sroot == NULL) 
@@ -104,7 +104,7 @@ void AlgoHandler::fillGraph(){
         // Pop the top item from stack and process it 
         AVLTree<Seconds>::Node *node = Sstack.top(); 
 
-        fillNanosecondGraph(node);
+        fillNanosecondGraphs(node);
 
         Sstack.pop(); 
   
@@ -118,7 +118,7 @@ void AlgoHandler::fillGraph(){
 
 
 
-void AlgoHandler::fillNanosecondGraph(AVLTree<Seconds>::Node *Snode){
+void AlgoHandler::fillNanosecondGraphs(AVLTree<Seconds>::Node *Snode){
     AVLTree<AddOrder>::Node * AOroot=Snode->AOTree->getRoot();
     
     if (AOroot == NULL) 
