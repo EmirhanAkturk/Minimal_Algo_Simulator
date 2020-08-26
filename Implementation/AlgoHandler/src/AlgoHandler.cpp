@@ -35,17 +35,6 @@ void AlgoHandler::compute(const char* file,char calculateChoice){
         ofstream outFileB("outputFiles/OrderBookId.txt");
         
         OBITree->writeFile(outFileB,INORDER);
-
-        // tStart = clock();
-
-        // ofstream outFile("outputFiles/timestamps.txt");
-
-        // if(!outFile.good()){
-        //     cerr<<"File  outputFiles/timestamps.txt  couldn't be opened.\n";
-        //     exit(-1);
-        // }
-        
-        // graph->writeFile(outFile);
         
         runtime=clock() - tStart;
         cout<<"Timestamp Graph writeFile time taken:"<<(double)1000*(runtime)/CLOCKS_PER_SEC<<"ms\n";
